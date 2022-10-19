@@ -58,8 +58,8 @@ function MenuBox({ items, selectedItem, setSelectedItem }) {
                                                 {
                                                     ({ active }) => (
                                                         <>
-                                                            {(selectedItem.id === item.id) ? <span className='w-1/2 ml-2'><BsCheck2 /></span> : <span className='w-1/2 ml-2'></span>}
-                                                            <span className='w-1/2 ml-4'>{item.name}</span>
+                                                            {(selectedItem.id === item.id) ? <span className={`w-1/2 ml-2 font-semibold ${active && 'text-white'}`}><BsCheck2 /></span> : <span className='w-1/2 ml-2'></span>}
+                                                            <span className={`w-1/2 ml-4 ${active && 'text-white'}`}>{item.name}</span>
                                                         </>)
                                                 }
                                             </Menu.Item>
