@@ -44,13 +44,13 @@ function MenuBox({ items, selectedItem, setSelectedItem }) {
                 {
                     ({ open }) => (
                         <>
-                            <Menu.Button className={`relative inline-flex items-center  ${open && "z-50 border-t border-x border-gray-200 rounded-t-sm bg-white"}`}>
+                            <Menu.Button className={`relative h-8 inline-flex items-center ${open && "z-50 border-t border-x border-gray-200 rounded-t-sm bg-white"}`}>
                                 <selectedItem.Label />
                                 <span className='text-gray-600 mx-1 text-sm'>{selectedItem.name}</span>
                                 <span className={`mx-1 text-gray-500 text-sm ${open ? "rotate-180" : 'rotate-0'}`}><BsFillCaretDownFill /></span>
                             </Menu.Button>
-
-                            <Menu.Items className="absolute w-48 right-0 z-10 border border-gray-200 rounded-tl-sm rounded-b-sm bg-white shadow-sm" style={{ marginTop: "-3px" }}>
+                            {open && <div className='absolute w-full top-8 bg-white h-[5px] z-50 border-x border-gray-200'></div>}
+                            <Menu.Items className="absolute w-48 top-9 right-0 z-10 border border-gray-200 rounded-tl-sm rounded-b-sm bg-white shadow-sm">
                                 <div className=' w-full px-2 py-3'>
                                     {
                                         items.map(item => (
