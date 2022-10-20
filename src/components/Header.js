@@ -1,6 +1,15 @@
 import React, { useState } from 'react'
 import { Menu } from '@headlessui/react'
-import { BsCurrencyDollar, BsFillCaretDownFill, BsCheck2, BsBoxArrowLeft, BsBoxArrowRight, BsPerson } from 'react-icons/bs'
+import {
+    BsCurrencyDollar,
+    BsFillCaretDownFill,
+    BsCheck2,
+    BsBoxArrowLeft,
+    BsBoxArrowRight,
+    BsPerson,
+    BsGrid,
+    BsListUl
+} from 'react-icons/bs'
 import { MM, EG } from 'country-flag-icons/react/3x2';
 
 
@@ -10,8 +19,8 @@ const MMFlagIcon = () => <div className='w-6 h-4 m-1'><MM title='Myanmar' /></di
 const EngFlagIcon = () => <div className='w-6 h-4 m-1'><EG title='English' /></div>
 
 const UserIcon = () => <span className='m-1 text-xl'><BsPerson /></span>
-const SingInIcon = () => <span className=''><BsBoxArrowLeft /></span>
-const SignOutIcon = () => <span className=''><BsBoxArrowRight /></span>
+const SingInIcon = () => <span className='font-semibold'><BsBoxArrowLeft /></span>
+const SignOutIcon = () => <span className='font-semibold'><BsBoxArrowRight /></span>
 
 
 export default function Header() {
@@ -24,10 +33,11 @@ export default function Header() {
     const languange = [{ id: 1, name: "English", Label: EngFlagIcon }, { id: 2, name: "Myanmar", Label: MMFlagIcon }];
     const [selectedLanguage, setSelectedLanguage] = useState(languange[0]);
 
+    const accountInfo = { button: { name: "Account", Label: UserIcon }, items: [{ id: 1, name: "SignIn", Label: SingInIcon }, { id: 2, name: "SignOut", Label: SignOutIcon }] }
+
     function topMostSection() {
         return (
-            <div className="flex items-center justify-between">
-
+            <div className="container mx-auto flex items-center justify-between">
                 {/* Logo */}
                 <div className='border-2 border-gray-300 px-1 py-1 rounded'>
                     <span className='font-semibold text-xl text-gray-400 capitalize'>ecommerce site</span>
@@ -36,7 +46,16 @@ export default function Header() {
                 <div className='grid justify-items-center grid-cols-3 gap-1 divide-x'>
                     <SelectBox items={currency} selectedItem={selectedCurrency} setSelectedItem={setSelectedCurrency} />
                     <SelectBox items={languange} selectedItem={selectedLanguage} setSelectedItem={setSelectedLanguage} />
-                    <MenuBox button={{ name: "Account", Label: UserIcon }} items={[{ id: 1, name: "SignIn", Label: SingInIcon }, { id: 2, name: "SignOut", Label: SignOutIcon }]} />
+                    <MenuBox button={accountInfo.button} items={accountInfo.items} />
+                </div>
+            </div>);
+    }
+
+    function searchSection() {
+        return (
+            <div className='w-full my-2 border py-3 border-gray-100 bg-[#F8F8FF]'>
+                <div className='container mx-auto flex items-center'>
+                    <ViewSwitch />
                 </div>
             </div>);
     }
@@ -44,6 +63,7 @@ export default function Header() {
     return (
         <>
             {topMostSection()}
+            {searchSection()}
         </>
     )
 }
@@ -120,4 +140,16 @@ function MenuBox({ button, items }) {
                 }
             </div>
         </div>)
+}
+
+function ViewSwitch() {
+
+    const [view, setView] = useState({ grid: true, list: false });
+
+    return (
+        <div className='flex items-center justify-between border border-gray-200 bg-white rounded'>
+            <div onClick={() => setView(prev => ({ ...prev, grid: true, list: false }))} className={`text-xl m-1 p-1 cursor-pointer ${view.grid && 'bg-gray-200 rounded'} `}><BsGrid /></div>
+            <div onClick={() => setView(prev => ({ ...prev, list: true, grid: false }))} className={`text-xl m-1 p-1 cursor-pointer ${view.list && 'bg-gray-200 rounded'}`}><BsListUl /></div>
+        </div>
+    );
 }
