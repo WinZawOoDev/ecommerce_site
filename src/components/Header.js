@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Menu } from '@headlessui/react'
+import { AppContext } from '../App';
 import {
     BsCurrencyDollar,
     BsFillCaretDownFill,
@@ -53,7 +54,7 @@ export default function Header() {
 
     function searchSection() {
         return (
-            <div className='w-full my-2 border py-3 border-gray-100 bg-[#F8F8FF]'>
+            <div className='w-full my-2 py-3 border border-gray-100 bg-[#F8F8FF]'>
                 <div className='container mx-auto flex items-center'>
                     <ViewSwitch />
                 </div>
@@ -144,12 +145,12 @@ function MenuBox({ button, items }) {
 
 function ViewSwitch() {
 
-    const [view, setView] = useState({ grid: true, list: false });
+    const { UIView, setUIView } = useContext(AppContext);
 
     return (
         <div className='flex items-center justify-between border border-gray-200 bg-white rounded'>
-            <div onClick={() => setView(prev => ({ ...prev, grid: true, list: false }))} className={`text-xl m-1 p-1 cursor-pointer ${view.grid && 'bg-gray-200 rounded'} `}><BsGrid /></div>
-            <div onClick={() => setView(prev => ({ ...prev, list: true, grid: false }))} className={`text-xl m-1 p-1 cursor-pointer ${view.list && 'bg-gray-200 rounded'}`}><BsListUl /></div>
+            <div onClick={() => setUIView(prev => ({ ...prev, grid: true, list: false }))} className={`text-xl m-1 p-1 cursor-pointer ${UIView.grid && 'bg-gray-200 rounded'} `}><BsGrid /></div>
+            <div onClick={() => setUIView(prev => ({ ...prev, list: true, grid: false }))} className={`text-xl m-1 p-1 cursor-pointer ${UIView.list && 'bg-gray-200 rounded'}`}><BsListUl /></div>
         </div>
     );
 }
