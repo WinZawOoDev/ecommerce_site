@@ -5,7 +5,7 @@ export const AppContext = createContext(null);
 
 function App() {
   
-  const [UIView, setUIView] = useState({ gird: true, list: false });
+  const [UIView, setUIView] = useState({ grid: true, list: false });
 
   return (
     <AppContext.Provider value={{ UIView, setUIView }}>
