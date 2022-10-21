@@ -16,26 +16,7 @@ import {
     BsSuitHeart
 } from 'react-icons/bs'
 import { MM, EG } from 'country-flag-icons/react/3x2';
-
-
-const categories = [
-    { id: 1, name: "all categories", unavailable: false },
-    { id: 2, name: "pc & components", unavailable: false },
-    { id: 3, name: "phone & accessoires", unavailable: false },
-    { id: 4, name: "electronics", unavailable: false },
-    { id: 5, name: "office & stationary", unavailable: false },
-    { id: 6, name: "kitchen accessories", unavailable: false },
-    { id: 7, name: "tools & home appliances", unavailable: false },
-    { id: 8, name: "toys & outdoor", unavailable: false },
-    { id: 9, name: "pet appliances", unavailable: true },
-    { id: 10, name: "watches & jewellary", unavailable: false },
-    { id: 11, name: "outdoor fun & sport", unavailable: false },
-    { id: 12, name: "beauty, health & hair", unavailable: false },
-    { id: 13, name: "bags & shoes", unavailable: false },
-    { id: 14, name: "men's wear", unavailable: false },
-    { id: 15, name: "womens's wear", unavailable: false },
-];
-
+import { category_data } from '../dummyData/Categories';
 
 
 const MoneySignIcon = () => <span className='p-1 border-2 border-gray-300 rounded-full text-gray-500 m-1 text-sm'><BsCurrencyDollar /></span>;
@@ -60,7 +41,7 @@ export default function Header() {
 
     const accountInfo = { button: { name: "Account", Label: UserIcon }, items: [{ id: 1, name: "SignIn", Label: SingInIcon }, { id: 2, name: "SignOut", Label: SignOutIcon }] }
 
-    const [searchForm, setSearchForm] = useState({ product: "", category: categories[0] });
+    const [searchForm, setSearchForm] = useState({ product: "", category: category_data[0] });
 
     const handleCatSelect = category => setSearchForm(prev => ({ ...prev, category }));
     const handleProductChange = ({ target: { value } }) => setSearchForm(prev => ({ ...prev, product: value }));
@@ -89,8 +70,8 @@ export default function Header() {
 
     function searchSection() {
         return (
-            <div className='w-full my-2 py-3 border border-gray-100 bg-[#F8F8FF]'>
-                <div className='container mx-auto flex items-center justify-center'>
+            <div className='absolute right-0 z-50 w-full my-2 py-3 border border-gray-100 bg-[#F8F8FF]'>
+                <div className='flex items-center justify-center'>
 
                     {/* UI View Switch */}
                     <div className='flex items-center justify-between border border-gray-200 bg-white rounded mr-11'>
@@ -111,9 +92,9 @@ export default function Header() {
 
                     {/* Search Form */}
                     <div className='relative flex items-center border-2 border-red-800 rounded mx-2 bg-white w-6/12'>
-                        <input type="text" name='product' value={searchForm["product"]} onChange={handleProductChange} className="flex grow py-2 pl-2 focus:outline-none" />
+                        <input type="text" name='product' value={searchForm["product"]} onChange={handleProductChange} className="flex grow py-2 pl-2 focus:outline-none bg-white" />
                         <div className='flex items-center'>
-                            <ListBox items={categories} value={searchForm["category"]} handleChange={handleCatSelect} />
+                            <ListBox items={category_data} value={searchForm["category"]} handleChange={handleCatSelect} />
                             <button onClick={() => handleSearch()} className='h-auto bg-red-800 border border-red-800 p-2'><BsSearch className='text-white text-2xl' /></button>
                         </div>
                     </div>
@@ -233,7 +214,7 @@ function ListBox({ items, value, handleChange }) {
             {
                 ({ open }) => (
                     <>
-                        <Listbox.Button className="relative flex items-center border-l border-red-800 py-[11px] px-2 focus:outline-none ">
+                        <Listbox.Button className="relative flex items-center border-l border-red-800 py-[11px] px-3 focus:outline-none bg-white ">
                             <span className='text-sm text-gray-500 capitalize'>{value.name}</span>
                             <span className={`ml-2 mr-1 text-gray-400 text-xs ${open ? 'rotate-180' : 'rotate-0'}`}><BsFillCaretDownFill /></span>
                         </Listbox.Button>
