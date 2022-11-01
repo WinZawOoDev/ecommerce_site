@@ -55,7 +55,7 @@ export default function Header() {
 
     function topMostSection() {
         return (
-            <div className="container mx-auto flex items-center justify-between">
+            <div className="container mx-auto flex items-center justify-between z-50">
                 {/* Logo */}
                 <div className='border-2 border-gray-300 px-1 py-1 rounded'>
                     <span className='font-semibold text-xl text-gray-400 capitalize'>ecommerce site</span>
@@ -70,8 +70,8 @@ export default function Header() {
 
     function searchSection() {
         return (
-            <div className='absolute right-0 z-50 w-full my-2 py-3 border border-gray-100 bg-[#F8F8FF]'>
-                <div className='flex items-center justify-center'>
+            <div className='w-full my-2 py-3 border border-gray-100 bg-[#F8F8FF]'>
+                <div className='flex items-center justify-center mx-auto'>
 
                     {/* UI View Switch */}
                     <div className='flex items-center justify-between border border-gray-200 bg-white rounded mr-11'>
@@ -135,7 +135,7 @@ export default function Header() {
 
 function SelectBox({ items, selectedItem, setSelectedItem }) {
     return (
-        <div className='w-auto'>
+        <div className='w-auto z-auto'>
             <Menu as="div" className="relative inline-block">
                 {
                     ({ open }) => (
@@ -210,7 +210,7 @@ function MenuBox({ button, items }) {
 function ListBox({ items, value, handleChange }) {
 
     return (
-        <Listbox value={value} onChange={handleChange} as="div" className="relative pl-2">
+        <Listbox value={value} onChange={handleChange} as="div" className="relative pl-2 z-50">
             {
                 ({ open }) => (
                     <>
