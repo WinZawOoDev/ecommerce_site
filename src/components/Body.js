@@ -5,7 +5,6 @@ import { category_data } from '../dummyData/Categories';
 export default function Body() {
 
 
-
     function topMostSection() {
         return (
             <div className='relative grid grid-cols-5 gap-1 divide-x-2'>
