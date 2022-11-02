@@ -113,7 +113,7 @@ export default function Header() {
                             className={`absolute h-auto z-50 w-full border-x border-x-gray-300 border-b border-b-gray-300 bg-white rounded-b-md shadow-lg ${!searchForm.showResult && "hidden"}`}>
                             <ul className='my-4 w-full'>
                                 {
-                                    searchResult.map(result => <li onClickCapture={() => closeSearchResult()} className='my-1 px-7 cursor-pointer hover:bg-gray-100 rounded text-gray-700 hover:text-gray-500 hover:px-5 py-1 text-sm'>{result}</li>)
+                                    searchResult.map((result, index) => <li key={index+1} onClickCapture={() => closeSearchResult()} className='my-1 px-7 cursor-pointer hover:bg-gray-100 rounded text-gray-700 hover:text-gray-500 hover:px-5 py-1 text-sm'>{result}</li>)
                                 }
                             </ul>
                         </div>

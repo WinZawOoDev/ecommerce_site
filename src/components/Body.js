@@ -1,21 +1,53 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { BsListUl } from 'react-icons/bs';
 import { category_data } from '../dummyData/Categories';
+import { BsChevronLeft, BsChevronRight } from 'react-icons/bs'
+
+
+const discount_items = [
+    {
+        id: 1,
+        img_src: "images/discount_itm/dis_facial_form.png",
+        normal_prc: "20000",
+        dis_prc: "17000"
+    },
+    {
+        id: 2,
+        img_src: "images/discount_itm/dis_lipstick.png",
+        normal_prc: "30000",
+        dis_prc: "27000"
+    },
+    {
+        id: 3,
+        img_src: "images/discount_itm/dis_slim_bag.png",
+        normal_prc: "60000",
+        dis_prc: "57000"
+    }
+];
 
 export default function Body() {
 
 
     function topMostSection() {
         return (
-            <div className='relative grid grid-cols-5 gap-1 divide-x-2'>
-                {/* Category List */}
+            <div className='relative grid grid-cols-5 gap-1'>
+
                 <CategoryList data={category_data} />
 
-                <div className='col-span-3 text-center flex justify-center'>
-                    02
-                </div>
-                <div className='text-center'>
-                    03
+                <DiscountSale items={discount_items} />
+
+                <div className='bg-gradient-to-t from-[#57513100] to-[#c7724e] rounded my-2 shadow mx-2'>
+                    <div className='h-40 text-center pt-3'>
+                        <span className='text-white text-xl font-medium capitalize'>clearance sale</span>
+                        <p className='capitalize mt-3 text-gray-700 font-light'>explore fast, for clearance sale promotion items</p>
+                        <button className='float-right mt-4 text-sm mr-2 text-white'>explore more...</button>
+                    </div>
+                    <div className='h-48 m-2 bg-white rounded'>
+
+                    </div>
+                    <div className='h-48 m-2 bg-white rounded'>
+
+                    </div>
                 </div>
             </div>
 
@@ -33,10 +65,6 @@ export default function Body() {
 
 
 function CategoryList({ data }) {
-
-    useEffect(() => {
-        console.log(data[0]);
-    }, [])
 
     const [catActive, setCatActive] = useState({ status: false, index: null, des_act: false });
 
@@ -81,7 +109,7 @@ function CategoryList({ data }) {
             {/* </div> */}
             <div
                 onMouseLeave={(e) => setCatActive(prev => ({ ...prev, status: false, index: null, des_act: false }))}
-                className={`absolute top-12 left-[288px] transition ease-in-out duration-100 opacity-0 ${catActive.status && 'opacity-100'}`}
+                className={`absolute z-30 top-12 left-[288px] transition ease-in-out duration-100 opacity-0 ${catActive.status && 'opacity-100'}`}
             >
                 <div className='shadow-lg border border-gray-200 rounded p-8 bg-white min-h-[35.9em]  min-w-[30em]'>
                     <div className='grid grid-cols-3 gap-x-10 gap-y-3'>
@@ -104,4 +132,55 @@ function CategoryList({ data }) {
             </div>
         </div>
     )
+}
+
+
+function DiscountSale({ items }) {
+    return (
+        <div className='col-span-3 relative my-2'>
+            <div className='w-full h-80 flex items-center justify-between mb-1 bg-[url("../public/images/slide_img.jpg")] bg-contain rounded shadow'>
+                <div className='p-2 bg-gray-500 opacity-60 rounded-r-md'>
+                    <span className='text-xl font-bold'><BsChevronLeft /></span>
+                </div>
+                <div className='place-self-end mb-2 inline-flex items-center'>
+                    <div className='w-2 h-2 bg-gray-700 rounded-full mx-1'></div>
+                    <div className='w-2 h-2 bg-gray-700 rounded-full mx-1'></div>
+                    <div className='w-3 h-2 bg-gray-700 rounded-full m-1'></div>
+                    <div className='w-2 h-2 bg-gray-700 rounded-full m-1'></div>
+                </div>
+                <div className='p-2 bg-gray-500 opacity-60 rounded-l-md'>
+                    <span className='text-xl'><BsChevronRight /></span>
+                </div>
+            </div>
+            <div className='relative w-full h-64 flex justify-between rounded mt-1 bg-gradient-to-r from-[#25560600] via-[#395c1f67]  via-[#4d6139d1] to-[#637151] shadow-md'>
+                <div className='w-72 text-center px-3 py-2 my-auto'>
+                    <span className='capitalize font-semibold text-2xl text-gray-800 my-1'>discount sales</span>
+                    <p className='text-gray-700 font-light my-1'>get discount items for winter promotion !</p>
+                    <button className='bg-white rounded-md py-2 px-2 my-3'>
+                        <span className='mx-1 font-medium text-gray-700'>MMK</span>
+                        <span className='mx-1 font-medium text-red-600'>30%</span>
+                    </button>
+                </div>
+                <div className='relative mx-2 flex items-center my-3'>
+                    {
+                        items.map((item, index) => (
+                            <div key={item.id} className='w-44 bg-white h-full rounded mx-3 hover:cursor-pointer'>
+                                <div className='flex justify-end mt-2 mr-2'>
+                                    <span className=' text-white bg-red-500 rounded-lg text-xs font-medium p-1'>{item.dis_prc} MMK</span>
+                                </div>
+                                <div className='flex items-center justify-center mt-2'>
+                                    <img alt='discount item' className='h-40' src={item.img_src} />
+                                </div>
+                                <div className='flex items-center justify-center mt-1'>
+                                    <span className='mx-1 text-gray-500 text-sm line-through'>{item.normal_prc}</span>
+                                    <span className='mx-1  text-gray-700 text-sm font-medium'>MMK</span>
+                                </div>
+                            </div>
+                        ))
+                    }
+
+                </div>
+            </div>
+        </div>
+    );
 }
