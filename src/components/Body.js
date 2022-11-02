@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsListUl } from 'react-icons/bs';
 import { category_data } from '../dummyData/Categories';
 
@@ -34,6 +34,10 @@ export default function Body() {
 
 function CategoryList({ data }) {
 
+    useEffect(() => {
+        console.log(data[0]);
+    }, [])
+
     const [catActive, setCatActive] = useState({ status: false, index: null, des_act: false });
 
     const isCatActive = (index) => {
@@ -66,8 +70,8 @@ function CategoryList({ data }) {
                                 <span className={`capitalize truncate ${isCatActive(index) ? 'text-orange-500 font-normal' : 'text-gray-800 font-light'}`}>{category.name}</span>
                                 <div
                                     onMouseEnter={(e) => setCatActive(prev => ({ ...prev, status: true, index, des_act: true }))}
-                                    onMouseLeave={(e) => setCatActive(prev => ({ ...prev, index, des_act: false }))}
-                                    className={`absolute -right-4 transition ease-in-out duration-100 opacity-0 ${isCatActive(index) && "opacity-100"} bg-white h-6 w-6 z-50 border-b border-b-gray-200 border-l border-gray-200 -translate-x-3 -translate-y-0 rotate-45`}>
+                                    // onMouseLeave={(e) => setCatActive(prev => ({ ...prev, index, des_act: false }))}
+                                    className={`absolute -right-4 transition ease-in-out duration-100 opacity-0 ${isCatActive(index) && "opacity-100"} bg-white h-6 w-6 z-40 border-b border-b-gray-200 border-l border-gray-200 -translate-x-3 -translate-y-0 rotate-45`}>
                                 </div>
                             </li>
                         ))
@@ -79,8 +83,23 @@ function CategoryList({ data }) {
                 onMouseLeave={(e) => setCatActive(prev => ({ ...prev, status: false, index: null, des_act: false }))}
                 className={`absolute top-12 left-[288px] transition ease-in-out duration-100 opacity-0 ${catActive.status && 'opacity-100'}`}
             >
-                <div className='shadow-lg border border-gray-200 rounded bg-white min-h-[40.9em] max-h-[40.9em] w-48'>
-                    {/* <div  style={{top: `${pageAxis.pageY - 220}px`}} className={`absolute bg-white h-6 w-6 z-50 border-b border-b-gray-200 border-l border-gray-200 -translate-x-3 -translate-y-0 rotate-45`}></div> */}
+                <div className='shadow-lg border border-gray-200 rounded p-8 bg-white min-h-[35.9em]  min-w-[30em]'>
+                    <div className='grid grid-cols-3 gap-x-10 gap-y-3'>
+                        {
+                            data[catActive?.index]?.sub_cat.map((data, index1) => (
+                                <div key={index1 + 1} className='px-4 py-2'>
+                                    {/* title */}
+                                    <span className='font-medium text-gray-700 text-sm'>{data.name}</span>
+                                    {/* item */}
+                                    <ul className='mt-1'>
+                                        {
+                                            data.products.map((product, index2) => <li key={index2 + 1} onClickCapture={() => setCatActive(prev => ({ ...prev, status: false, index: null, des_act: false }))} className='text-gray-700 font-light text-sm my-1 hover:underline cursor-pointer hover:text-orange-500'>{product}</li>)
+                                        }
+                                    </ul>
+                                </div>
+                            ))
+                        }
+                    </div>
                 </div>
             </div>
         </div>

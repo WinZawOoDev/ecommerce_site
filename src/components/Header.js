@@ -41,15 +41,19 @@ export default function Header() {
 
     const accountInfo = { button: { name: "Account", Label: UserIcon }, items: [{ id: 1, name: "SignIn", Label: SingInIcon }, { id: 2, name: "SignOut", Label: SignOutIcon }] }
 
-    const [searchForm, setSearchForm] = useState({ product: "", category: category_data[0] });
+    const [searchForm, setSearchForm] = useState({ product: "", category: category_data[0], showResult: false });
+    const closeSearchResult = () => setSearchForm(prev => ({ ...prev, showResult: prev.showResult && false }));
 
     const handleCatSelect = category => setSearchForm(prev => ({ ...prev, category }));
-    const handleProductChange = ({ target: { value } }) => setSearchForm(prev => ({ ...prev, product: value }));
+    const handleProductChange = ({ target: { value } }) => setSearchForm(prev => ({ ...prev, product: value, showResult: value && true }));
+
+    const searchResult = ["result1", "result2", "result3", "result4", "result5", "result6", "result7"];
 
     const handleSearch = () => {
-        if (searchForm["product"])
-            console.log(searchForm)
-        else
+        if (searchForm["product"]) {
+            console.log(searchForm);
+            setSearchForm(prev => ({ ...prev, showResult: prev.showResult && false }))
+        } else
             console.log(false);
     }
 
@@ -89,18 +93,34 @@ export default function Header() {
                         </div>
                     </div>
 
-
                     {/* Search Form */}
-                    <div className='relative flex items-center border-2 border-red-800 rounded mx-2 bg-white w-6/12'>
-                        <input type="text" name='product' value={searchForm["product"]} onChange={handleProductChange} className="flex grow py-2 pl-2 focus:outline-none bg-white" />
-                        <div className='flex items-center'>
-                            <ListBox items={category_data} value={searchForm["category"]} handleChange={handleCatSelect} />
-                            <button onClick={() => handleSearch()} className='h-auto bg-red-800 border border-red-800 p-2'><BsSearch className='text-white text-2xl' /></button>
+                    <div className='relative w-6/12' onMouseLeave={() => closeSearchResult()}>
+
+                        {/* Form */}
+                        <div className={`relative flex items-center border-2 border-red-800 bg-white ${searchForm.showResult ? "rounded-t" : "rounded"}`}>
+                            <input type="text" name='product' value={searchForm["product"]} onChange={handleProductChange} className="flex grow py-2 pl-2 focus:outline-none bg-white" />
+                            <div className='flex items-center'>
+                                <div onClick={() => closeSearchResult()}>
+                                    <ListBox items={category_data} value={searchForm["category"]} handleChange={handleCatSelect} />
+                                </div>
+                                <button onClick={() => handleSearch()} className='h-auto bg-red-800 border border-red-800 p-2'><BsSearch className='text-white text-2xl' /></button>
+                            </div>
+                        </div>
+
+                        {/* Search Result */}
+                        <div
+                            onMouseOut={() => { }}
+                            className={`absolute h-auto z-50 w-full border-x border-x-gray-300 border-b border-b-gray-300 bg-white rounded-b-md shadow-lg ${!searchForm.showResult && "hidden"}`}>
+                            <ul className='my-4 w-full'>
+                                {
+                                    searchResult.map(result => <li onClickCapture={() => closeSearchResult()} className='my-1 px-7 cursor-pointer hover:bg-gray-100 rounded text-gray-700 hover:text-gray-500 hover:px-5 py-1 text-sm'>{result}</li>)
+                                }
+                            </ul>
                         </div>
                     </div>
 
-                    <div className='flex items-center'>
 
+                    <div className='flex items-center'>
                         {/* Cart */}
                         <button className='relative ml-20 p-3 focus:outline-none'>
                             <div className='absolute -top-2 -right-1 bg-orange-600 border border-gray-200 px-[6px] py-[2px] rounded-[50%] shadow'>
@@ -146,7 +166,7 @@ function SelectBox({ items, selectedItem, setSelectedItem }) {
                                 <span className={`mx-1 text-gray-500 text-sm ${open ? "rotate-180" : 'rotate-0'}`}><BsFillCaretDownFill /></span>
                             </Menu.Button>
                             {open && <div className='absolute w-full top-8 bg-white h-[5px] z-50 border-x border-gray-200'></div>}
-                            <Menu.Items className="absolute w-48 top-9 right-0 z-10 border border-gray-200 rounded-tl-sm rounded-b-sm bg-white shadow-sm">
+                            <Menu.Items className="absolute w-48 top-9 right-0 z-10 border border-gray-200 rounded-tl-sm rounded-b-sm bg-white shadow-md">
                                 <div className=' w-full px-2 py-3'>
                                     {
                                         items.map(item => (
@@ -187,7 +207,7 @@ function MenuBox({ button, items }) {
                     open && (
                         <>
                             <div className='absolute w-full top-8 bg-white h-[5px] z-50 border-x border-gray-200'></div>
-                            <div className="absolute w-40 top-9 right-0 z-10 border border-gray-200 rounded-tl-sm rounded-b-sm bg-white shadow-sm">
+                            <div className="absolute w-40 top-9 right-0 z-10 border border-gray-200 rounded-tl-sm rounded-b-sm bg-white shadow-md">
                                 <div className=' w-full px-2 py-3'>
                                     {
                                         items.map(item => (
