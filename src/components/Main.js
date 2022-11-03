@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import Header from './Header'
 import Body from './Body'
+import Footer from './Footer'
 
 export default function Main() {
 
@@ -15,6 +16,7 @@ export default function Main() {
         <div className='py-4'>
             <Header />
             <Body />
+            <Footer/>
         </div>
     )
 }
