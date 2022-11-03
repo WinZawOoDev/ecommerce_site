@@ -25,6 +25,22 @@ const discount_items = [
     }
 ];
 
+
+const clearance_items = [
+    {
+        id: 1,
+        img_src: "images/clearance_sale/clr_pant.png",
+        prc: "13000",
+        dsc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
+    },
+    {
+        id: 2,
+        img_src: "images/clearance_sale/clr_clipper.png",
+        prc: "20000",
+        dsc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
+    }
+];
+
 export default function Body() {
 
 
@@ -39,15 +55,25 @@ export default function Body() {
                 <div className='bg-gradient-to-t from-[#57513100] to-[#c7724e] rounded my-2 shadow mx-2'>
                     <div className='h-40 text-center pt-3'>
                         <span className='text-white text-xl font-medium capitalize'>clearance sale</span>
-                        <p className='capitalize mt-3 text-gray-700 font-light'>explore fast, for clearance sale promotion items</p>
+                        <p className='capitalize mt-5 text-gray-700 font-light text-sm'>explore fast, for clearance sale promotion items</p>
                         <button className='float-right mt-4 text-sm mr-2 text-white'>explore more...</button>
                     </div>
-                    <div className='h-48 m-2 bg-white rounded'>
-
-                    </div>
-                    <div className='h-48 m-2 bg-white rounded'>
-
-                    </div>
+                    {
+                        clearance_items.map(item => (
+                            <div key={item.id} className='h-48 m-2 flex justify-between items-center bg-white rounded'>
+                                <div className='w-[50em]'>
+                                    <img alt='sale item' src={item.img_src} />
+                                </div>
+                                <div className='text-center px-3 -ml-2'>
+                                    <p className='text-xs font-light text-gray-700'>{item.dsc}</p>
+                                    <button className='bg-gray-100 rounded px-1 py-1 mt-2'>
+                                        <span className='text-sm text-gray-800'>{item.prc}</span>
+                                        <span className='text-sm mx-2'>MMK</span>
+                                    </button>
+                                </div>
+                            </div>
+                        ))
+                    }
                 </div>
             </div>
 
@@ -58,7 +84,6 @@ export default function Body() {
     return (
         <div className='container mx-auto'>
             {topMostSection()}
-
         </div>
     )
 }
