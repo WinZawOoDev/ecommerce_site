@@ -99,7 +99,7 @@ export default function Body() {
                                     </div>
                                 </div>
                                 <div className='h-[35%]  px-5 text-left'>
-                                    <span className='truncate block font-semibold text-gray-600'>Logitech G502 Lightspeed Wireless Gaming Mouse with Hero 25K Sensor, PowerPlay Compatible, Tunable Weights and Lightsync RGB - Black</span>
+                                    <span className='truncate block font-medium text-gray-600'>Logitech G502 Lightspeed Wireless Gaming Mouse with Hero 25K Sensor, PowerPlay Compatible, Tunable Weights and Lightsync RGB - Black</span>
                                     <div className=''>
                                         <span className='text-gray-600 font-light text-sm'>Brand : </span>
                                         <span className='text-sm text-gray-800'>Logitech</span>
