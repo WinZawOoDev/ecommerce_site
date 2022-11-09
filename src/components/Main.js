@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import Header from './Header'
 import Body from './Body'
 import Footer from './Footer'
+import OneCategory from './OneCategory'
 
 export default function Main() {
 
@@ -15,7 +16,8 @@ export default function Main() {
     return (
         <div className='py-4'>
             <Header />
-            <Body />
+            {/* <Body /> */}
+            <OneCategory/>
             <Footer/>
         </div>
     )
