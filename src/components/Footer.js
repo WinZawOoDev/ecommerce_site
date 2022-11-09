@@ -54,13 +54,13 @@ export default function Footer() {
                 <div className='flex justify-center'>
                     <div className='grid grid-cols-4 gap-x-32 gap-y-5'>
                         {
-                            data_list.map(data => (
+                            data_list.map((data) => (
                                 <div key={data.id} className='w-56 flex justify-center'>
                                     <div className='px-5'>
                                         <span className='text-gray-300 font-semibold'>{data.title}</span>
                                         <ul className='mt-3'>
                                             {
-                                                data.list.map(d => <li className='text-gray-200 text-sm font-light my-[0.3em] cursor-pointer hover:underline hover:text-orange-500'>{d}</li>)
+                                                data.list.map((d, index) => <li key={index + 1} className='text-gray-200 text-sm font-light my-[0.3em] cursor-pointer hover:underline hover:text-orange-500'>{d}</li>)
                                             }
                                         </ul>
                                     </div>
