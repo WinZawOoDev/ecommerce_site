@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { BsChevronRight, BsChevronExpand, BsCheck, BsFillCaretRightSquareFill } from 'react-icons/bs'
+import { BsChevronRight, BsChevronExpand, BsCheck, BsFillCaretRightSquareFill, BsChevronDoubleLeft, BsChevronDoubleRight, BsThreeDots } from 'react-icons/bs'
 import ProductCard from './ProductCard'
 import { Listbox, Transition } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -288,6 +288,25 @@ export default function OneCategory() {
                 <div className='grid grid-cols-4 gap-1'>
                     <ProductCard product={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]} />
                 </div>
+            </div>
+            <div className='flex justify-center mt-2'>
+                <ul className='relative flex items-center bg-white p-1 rounded h-9'>
+                    <li className='p-2 border border-gray-300 rounded m-[0.1em] bg-teal-600 h-full w-7  flex items-center justify-center cursor-pointer'>
+                        <BsChevronDoubleLeft className='text-white font-bold' />
+                    </li>
+                    <li className='p-2 border border-gray-300 rounded m-[0.1em] text-sm font-light h-full w-7  flex items-center justify-center cursor-pointer'>1</li>
+                    <li className='p-2 border border-teal-300 bg-teal-50 rounded m-[0.1em] text-sm font-light h-full w-7  flex items-center justify-center cursor-pointer'>2</li>
+                    <li className='p-2 border border-gray-300 rounded m-[0.1em] text-sm font-light h-full w-7  flex items-center justify-center cursor-pointer'>3</li>
+                    <li className='p-2 m-[0.1em] font-bold h-full w-7  flex items-center justify-center'>
+                        <BsThreeDots />
+                    </li>
+                    <li className='p-2 border border-gray-300 rounded m-[0.1em] text-sm font-light h-full w-7  flex items-center justify-center cursor-pointer'>4</li>
+                    <li className='p-2 border border-gray-300 rounded m-[0.1em] text-sm font-light h-full w-7  flex items-center justify-center cursor-pointer'>5</li>
+                    <li className='p-2 border border-gray-300 rounded m-[0.1em] text-sm font-light h-full w-7  flex items-center justify-center cursor-pointer'>6</li>
+                    <li className='p-2 border border-gray-300 rounded m-[0.1em] bg-teal-600 h-full w-7 flex items-center justify-center cursor-pointer'>
+                        <BsChevronDoubleRight className='text-white font-bold' />
+                    </li>
+                </ul>
             </div>
         </div>
     )
