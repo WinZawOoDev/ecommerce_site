@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import Header from './Header'
 import Body from './Body'
 import Footer from './Footer'
@@ -13,12 +14,15 @@ export default function Main() {
     //         .then(json => console.log(json));
     // }, []);
 
+
     return (
         <div className='py-4'>
             <Header />
-            {/* <Body /> */}
-            <OneCategory/>
-            <Footer/>
+            <Routes>
+                <Route path='/' element={<Body />} />
+                <Route path='/:mainCategory/:subCategory/:product' element={<OneCategory />} />
+            </Routes>
+            <Footer />
         </div>
     )
 }

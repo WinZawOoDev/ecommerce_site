@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react'
+import { Link } from 'react-router-dom'
 import { Menu, Listbox } from '@headlessui/react'
 import { AppContext } from '../App';
 import {
@@ -62,7 +63,9 @@ export default function Header() {
             <div className="container mx-auto flex items-center justify-between z-50">
                 {/* Logo */}
                 <div className='border-2 border-gray-300 px-1 py-1 rounded'>
-                    <span className='font-semibold text-xl text-gray-400 capitalize'>ecommerce site</span>
+                    <Link to={"/"}>
+                        <span className='font-semibold text-xl text-gray-400 capitalize'>ecommerce site</span>
+                    </Link>
                 </div>
                 <div className='grid justify-items-center grid-cols-3 gap-1 divide-x'>
                     <SelectBox items={currency} selectedItem={selectedCurrency} setSelectedItem={setSelectedCurrency} />
@@ -113,7 +116,7 @@ export default function Header() {
                             className={`absolute h-auto z-50 w-full border-x border-x-gray-300 border-b border-b-gray-300 bg-white rounded-b-md shadow-lg ${!searchForm.showResult && "hidden"}`}>
                             <ul className='my-4 w-full'>
                                 {
-                                    searchResult.map((result, index) => <li key={index+1} onClickCapture={() => closeSearchResult()} className='my-1 px-7 cursor-pointer hover:bg-gray-100 rounded text-gray-700 hover:text-gray-500 hover:px-5 py-1 text-sm'>{result}</li>)
+                                    searchResult.map((result, index) => <li key={index + 1} onClickCapture={() => closeSearchResult()} className='my-1 px-7 cursor-pointer hover:bg-gray-100 rounded text-gray-700 hover:text-gray-500 hover:px-5 py-1 text-sm'>{result}</li>)
                                 }
                             </ul>
                         </div>

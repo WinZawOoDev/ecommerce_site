@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { BsChevronRight, BsChevronExpand, BsCheck, BsFillCaretRightSquareFill, BsChevronDoubleLeft, BsChevronDoubleRight, BsThreeDots } from 'react-icons/bs'
 import ProductCard from './ProductCard'
 import { Listbox, Transition } from '@headlessui/react'
@@ -206,6 +207,8 @@ export default function OneCategory() {
 
     const category_tree = ["Home", "pc & components", "laptop"];
 
+    const urlParams = useParams();
+
     const [brandChecked, setBrandChecked] = useState([]);
     // const handleCheckBoxChange = ({ e: { currentTarget: { checked } }, item }) => item && setBrandChecked(prevs => prevs.map(prev => prev.id === item.id ? { ...prev, checked } : prev))
 
@@ -228,6 +231,7 @@ export default function OneCategory() {
         e.preventDefault();
         setPrices(prev => ({ ...prev, min: "", max: "" }));
     }
+
 
 
     useEffect(() => {
@@ -289,7 +293,7 @@ export default function OneCategory() {
                     <ProductCard product={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]} />
                 </div>
             </div>
-            <div className='flex justify-center mt-2'>
+            <div className='flex justify-center my-5'>
                 <ul className='relative flex items-center bg-white p-1 rounded h-9'>
                     <li className='p-2 border border-gray-300 rounded m-[0.1em] bg-teal-600 h-full w-7  flex items-center justify-center cursor-pointer'>
                         <BsChevronDoubleLeft className='text-white font-bold' />

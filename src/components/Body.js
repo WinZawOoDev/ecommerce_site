@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { BsListUl } from 'react-icons/bs';
 import ProductCard from './ProductCard';
 import { category_data } from '../dummyData/Categories';
@@ -8,19 +9,19 @@ import { BsChevronLeft, BsChevronRight, BsArrowDownShort } from 'react-icons/bs'
 const discount_items = [
     {
         id: 1,
-        img_src: "images/discount_itm/dis_facial_form.png",
+        img_src: "discount_itm/dis_facial_form.png",
         normal_prc: "20000",
         dis_prc: "17000"
     },
     {
         id: 2,
-        img_src: "images/discount_itm/dis_lipstick.png",
+        img_src: "discount_itm/dis_lipstick.png",
         normal_prc: "30000",
         dis_prc: "27000"
     },
     {
         id: 3,
-        img_src: "images/discount_itm/dis_slim_bag.png",
+        img_src: "discount_itm/dis_slim_bag.png",
         normal_prc: "60000",
         dis_prc: "57000"
     }
@@ -30,13 +31,13 @@ const discount_items = [
 const clearance_items = [
     {
         id: 1,
-        img_src: "images/clearance_sale/clr_pant.png",
+        img_src: "clearance_sale/clr_pant.png",
         prc: "13000",
         dsc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. ",
     },
     {
         id: 2,
-        img_src: "images/clearance_sale/clr_clipper.png",
+        img_src: "clearance_sale/clr_clipper.png",
         prc: "20000",
         dsc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
     }
@@ -62,7 +63,7 @@ export default function Body() {
                         clearance_items.map(item => (
                             <div key={item.id} className='h-48 m-2 flex justify-between items-center bg-white rounded'>
                                 <div className='w-[50em]'>
-                                    <img alt='sale item' src={item.img_src} />
+                                    <img alt='sale item' src={require("../images/" + item.img_src)} />
                                 </div>
                                 <div className='text-center px-3 -ml-2'>
                                     <p className='text-xs font-light text-gray-700'>{item.dsc}</p>
@@ -157,14 +158,18 @@ function CategoryList({ data }) {
                 <div className='shadow-lg border border-gray-200 rounded p-8 bg-white min-h-[35.9em]  min-w-[30em]'>
                     <div className='grid grid-cols-3 gap-x-10 gap-y-3'>
                         {
-                            data[catActive?.index]?.sub_cat.map((data, index1) => (
+                            data[catActive?.index]?.sub_cat.map((d, index1) => (
                                 <div key={index1 + 1} className='px-4 py-2'>
                                     {/* title */}
-                                    <span className='font-medium text-gray-700 text-sm'>{data.name}</span>
+                                    <span className='font-medium text-gray-700 text-sm'>{d.name}</span>
                                     {/* item */}
                                     <ul className='mt-1'>
                                         {
-                                            data.products.map((product, index2) => <li key={index2 + 1} onClickCapture={() => setCatActive(prev => ({ ...prev, status: false, index: null, des_act: false }))} className='text-gray-700 font-light text-sm my-1 hover:underline cursor-pointer hover:text-orange-500'>{product}</li>)
+                                            d.products.map((product, index2) => <li key={index2 + 1} className='text-gray-700 font-light text-sm my-1 hover:underline cursor-pointer hover:text-orange-500'>
+                                                <Link to={`${data[catActive?.index].name + "/" + d.slug + "/" + product}`}>
+                                                    {product}
+                                                </Link>
+                                            </li>)
                                         }
                                     </ul>
                                 </div>
@@ -181,7 +186,7 @@ function CategoryList({ data }) {
 function DiscountSale({ items }) {
     return (
         <div className='col-span-3 relative my-2'>
-            <div className='w-full h-80 flex items-center justify-between mb-1 bg-[url("../public/images/slide_img.jpg")] bg-contain rounded shadow'>
+            <div className='w-full relative h-80 flex items-center justify-between mb-1 bg-contain rounded shadow'>
                 <div className='p-2 bg-gray-500 opacity-60 rounded-r-md'>
                     <span className='text-xl font-bold'><BsChevronLeft /></span>
                 </div>
@@ -194,6 +199,7 @@ function DiscountSale({ items }) {
                 <div className='p-2 bg-gray-500 opacity-60 rounded-l-md'>
                     <span className='text-xl'><BsChevronRight /></span>
                 </div>
+                <img className='h-full w-full absolute -z-10' src={require("../images/slide_img.jpg")} />
             </div>
             <div className='relative w-full h-64 flex justify-between rounded mt-1 bg-gradient-to-r from-[#25560600] via-[#395c1f67]  via-[#4d6139d1] to-[#637151] shadow-md'>
                 <div className='w-72 text-center px-3 py-2 my-auto'>
@@ -212,7 +218,7 @@ function DiscountSale({ items }) {
                                     <span className=' text-white bg-red-500 rounded-lg text-xs font-medium p-1'>{item.dis_prc} MMK</span>
                                 </div>
                                 <div className='flex items-center justify-center mt-2'>
-                                    <img alt='discount item' className='h-40' src={item.img_src} />
+                                    <img alt='discount item' className='h-40' src={require("../images/" + item.img_src)} />
                                 </div>
                                 <div className='flex items-center justify-center mt-1'>
                                     <span className='mx-1 text-gray-500 text-sm line-through'>{item.normal_prc}</span>
