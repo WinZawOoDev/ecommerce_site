@@ -20,7 +20,7 @@ export default function Main() {
             <Header />
             <Routes>
                 <Route path='/' element={<Body />} />
-                <Route path='/:mainCategory/:subCategory/:product' element={<OneCategory />} />
+                <Route path='/category/:mainCategory/:subCategory/:product' element={<OneCategory />} />
             </Routes>
             <Footer />
         </div>

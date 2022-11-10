@@ -248,7 +248,7 @@ export default function OneCategory() {
             <div className='flex justify-between items-center mt-2'>
                 <div className='mx-2 flex items-center'>
                     {
-                        category_tree.map((cat, index, arr) => (
+                        ["Home", urlParams.mainCategory, urlParams.subCategory, urlParams.product].map((cat, index, arr) => (
                             <div key={index} className="flex items-center">
                                 <span className='font-light text-sm mr-1 cursor-pointer hover:text-orange-600 hover:underline'>{cat}</span>
                                 {((arr.length - 1) !== index) && <span className='mr-2'><BsChevronRight /></span>}
@@ -397,7 +397,7 @@ function CheckList({ title, items, onChange }) {
                     (items.length > 5) &&
                     (
                         <div className='flex justify-center items-center mt-3'>
-                            <button onClick={() => setViewMore(prev => !prev)} className='text-xs font-light text-sky-700 capitalize'>view {viewMore ? "less" : "more"}</button>
+                            <button onClick={() => setViewMore(prev => !prev)} className='text-xs font-light text-sky-700 capitalize outline-none'>view {viewMore ? "less" : "more"}</button>
                         </div>
                     )
                 }

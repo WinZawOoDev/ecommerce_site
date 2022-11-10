@@ -166,7 +166,7 @@ function CategoryList({ data }) {
                                     <ul className='mt-1'>
                                         {
                                             d.products.map((product, index2) => <li key={index2 + 1} className='text-gray-700 font-light text-sm my-1 hover:underline cursor-pointer hover:text-orange-500'>
-                                                <Link to={`${data[catActive?.index].name + "/" + d.slug + "/" + product}`}>
+                                                <Link to={`category/${data[catActive?.index].name + "/" + d.slug + "/" + product}`}>
                                                     {product}
                                                 </Link>
                                             </li>)
