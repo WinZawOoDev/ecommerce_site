@@ -143,7 +143,6 @@ const category_types = [
 
 
 
-
 function ListBox() {
     const [selected, setSelected] = useState(people[0])
 

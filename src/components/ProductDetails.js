@@ -1,24 +1,63 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import { useImmer } from 'use-immer'
 import { useParams } from 'react-router-dom'
-import { BsChevronRight } from 'react-icons/bs'
+import { BsChevronRight, BsStar, BsStarFill, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs'
+import { AppContext } from '../App';
 
 export default function ProductDetails() {
     const urlParams = useParams();
+    const { wishList, setWishList } = useContext(AppContext);
 
-    const [images, setImages] = useState([
-        { id: 1, name: "image0", src: "/items/mouse.png", view: true },
-        { id: 2, name: "image1", src: "/items/logi_1.jpg", view: false },
-        { id: 3, name: "image2", src: "/items/logi_2.jpg", view: false },
-        { id: 4, name: "image3", src: "/items/logi_3.jpg", view: false },
-        { id: 5, name: "image4", src: "/items/logi_4.jpg", view: false },
-    ]);
+    const [product, setProduct] = useImmer({
+        id: 1,
+        name: "logiTech G502 mouse",
+        total: 10,
+        images: [
+            { id: 1, name: "image0", src: "/items/mouse.png", view: true },
+            { id: 2, name: "image1", src: "/items/logi_1.jpg", view: false },
+            { id: 3, name: "image2", src: "/items/logi_2.jpg", view: false },
+            { id: 4, name: "image3", src: "/items/logi_3.jpg", view: false },
+            { id: 5, name: "image4", src: "/items/logi_4.jpg", view: false },
+        ]
+    });
 
-    const handleChangeImage = (currentImage) => setImages(prevs => prevs.map(prev => {
-        if (prev.view === true)
-            prev.view = false;
-        return (prev.id === currentImage.id) ? { ...prev, view: true } : prev;
-    }))
+    const handleChangeImage = (currentImage) => setProduct(prev => {
+        const prevView = prev.images.findIndex(img => img.view === true);
+        if (prevView !== -1) prev.images[prevView].view = false;
+        const index = prev.images.findIndex(img => img.id === currentImage.id);
+        if (index !== -1) prev.images[index].view = true;
+    });
+
+
+    const [qty, setQty] = useImmer({ current: 0, avaiable: product.total });
+    const noQty = qty.current === 0;
+    const itmNotAvaiable = qty.current === product.total;
+
+    const decreQty = () => {
+        if (noQty) return;
+        setQty(prevQty => {
+            prevQty.current--;
+            prevQty.avaiable++;
+        });
+    }
+
+    const increQty = () => {
+        if (itmNotAvaiable) return;
+        setQty(prevQty => {
+            prevQty.current++;
+            prevQty.avaiable = product.total - prevQty.current;
+        });
+    }
+
+
+    const handleWishList = () => setWishList(prev => {
+        const index = prev.findIndex(list => (list.id === product.id) && (list.name === product.name));
+        if (index)
+            prev.push({ id: product.id, name: product.name });
+        else
+            if (index !== -1) prev.splice(index, 1);
+    });
+
 
     return (
         <div className='container mx-auto'>
@@ -32,9 +71,64 @@ export default function ProductDetails() {
                 }
             </div>
             <div className='flex items-center bg-white my-2 p-2 rounded'>
-                <ViewImage images={images} handleChangeImage={handleChangeImage} />
-                <div className='border border-gray-400 h-96 w-1/2 m-1'></div>
-                <div className='border border-gray-400 h-96 w-1/4 m-1'></div>
+                <ViewImage images={product.images} handleChangeImage={handleChangeImage} />
+                <div className='w-1/2 m-1'>
+                    <div className='border-b border-b-gray-300 pb-5'>
+                        <p className='block text-xl font-semibold text-gray-800'>Logitech G502 Lightspeed Wireless Gaming Mouse with Hero 25K Sensor, PowerPlay Compatible, Tunable Weights and Lightsync RGB - Black</p>
+                        <div className='flex items-center mt-4'>
+                            <div className='flex items-center mr-3'>
+                                <BsStarFill className='mx-[0.9px] text-yellow-600 text-lg' />
+                                <BsStarFill className='mx-[0.9px] text-yellow-600 text-lg' />
+                                <BsStarFill className='mx-[0.9px] text-yellow-600 text-lg' />
+                                <BsStarFill className='mx-[0.9px] text-yellow-600 text-lg' />
+                                <BsStar className='mx-[0.9px] text-lg' />
+                            </div>
+                            <div className='text-center'>
+                                <span className="font-light">140 rating</span>
+                                <span className='mx-2 text-xl font-thin'>|</span>
+                                <span className='font-light'>200 answers and questions</span>
+                            </div>
+                        </div>
+                        <div className='mt-2'>
+                            <span className='mr-2 font-thin text-sm'>Brand :</span>
+                            <span className='font-light text-sm'>Logitech</span>
+                        </div>
+                    </div>
+                    <div className='py-5'>
+                        <div className='flex items-center justify-between'>
+                            <div className='text-orange-500 text-xl'>
+                                <span className='mr-4'>MMK</span>
+                                <span className='font-medium'>1500,000</span>
+                            </div>
+                            <div className='flex items-center text-gray-600'>
+                                <button onClick={() => handleWishList()}>
+                                    {wishList.find(list => (list.id === product.id) && (list.name === product.name)) ? <BsHeartFill className='text-2xl' /> : <BsHeart className='text-2xl' />}
+                                </button>
+                                <button><BsShare className='ml-6 text-2xl' /></button>
+                            </div>
+                        </div>
+                        <div className='my-5'>
+                            <span className='font-light text-sm block text-gray-600'>Quantity : </span>
+                            <div className='flex items-center mt-2'>
+                                <button onClick={() => decreQty()} className={`px-6 border border-gray-300 rounded text-2xl text-gray-500 outline-none transition duration-500 ease-in-out ${noQty && "cursor-default border-gray-100 text-gray-200"}`}>-</button>
+                                <span className='mx-3 text-2xl text-gray-700'>{qty.current}</span>
+                                <button onClick={() => increQty()} className={`px-6 border border-gray-300 rounded text-2xl text-gray-500 outline-none transition duration-500 ease-in-out ${itmNotAvaiable && "cursor-default border-gray-100 text-gray-200"}`}>+</button>
+                                <span className={`mx-5 font-thin ${itmNotAvaiable && "line-through"}`}>{itmNotAvaiable ? "no" : qty.avaiable} items aviables</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className='my-2'>
+                        <button className={`px-6 py-2 mr-5 bg-red-700 rounded-md border border-gray-200 shadow-sm outline-none transition duration-500 ease-in-out ${noQty && "bg-red-200 border-gray-50 cursor-default"}`}>
+                            <span className='text-white font-semibold'>Buy Now</span>
+                        </button>
+                        <button className={`px-6 py-2 ml-5 bg-orange-500 rounded-md border border-gray-200 shadow-sm outline-none transition duration-500 ease-in-out ${noQty && "bg-orange-200 border-gray-50 cursor-default"}`}>
+                            <span className='text-white font-semibold'>Add to Cart</span>
+                        </button>
+                    </div>
+                </div>
+                <div className=' h-96 w-1/4 m-1'>
+
+                </div>
             </div>
         </div>
     )

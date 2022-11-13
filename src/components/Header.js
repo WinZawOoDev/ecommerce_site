@@ -31,7 +31,7 @@ const SignOutIcon = () => <span className='font-semibold'><BsBoxArrowRight /></s
 
 export default function Header() {
 
-    const { UIView, setUIView } = useContext(AppContext);
+    const { UIView, setUIView, wishList } = useContext(AppContext);
 
     //Curreny selection
     const currency = [{ id: 1, name: "USD", Label: MoneySignIcon }, { id: 2, name: "MMK", Label: MoneySignIcon }];
@@ -136,7 +136,7 @@ export default function Header() {
                         {/* Wish List */}
                         <button className='relative flex items-center ml-10 p-3 focus:outline-none'>
                             <div className='absolute -top-2 -right-1 bg-orange-500 border border-gray-200 px-[6px] py-[2px] rounded-[50%] shadow'>
-                                <span className='text-white text-xl'>0</span>
+                                <span className='text-white text-xl'>{wishList.length}</span>
                             </div>
                             <span className='text-3xl text-gray-500'><BsSuitHeart /></span>
                             <span className='capitalize text-gray-400 text-lg mx-1'>wish list</span>
