@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Outlet } from 'react-router-dom'
 import Header from './Header'
 import Body from './Body'
 import Footer from './Footer'
 import OneCategory from './OneCategory'
+import ProductDetails from './ProductDetails'
 
 export default function Main() {
 
@@ -20,7 +21,8 @@ export default function Main() {
             <Header />
             <Routes>
                 <Route path='/' element={<Body />} />
-                <Route path='/category/:mainCategory/:subCategory/:product' element={<OneCategory />} />
+                <Route path='category/:mainCategory/:subCategory/:product' element={<OneCategory />} />
+                <Route path='product-details/:mainCategory/:subCategory/:product/:producId' element={<ProductDetails />} />
             </Routes>
             <Footer />
         </div>

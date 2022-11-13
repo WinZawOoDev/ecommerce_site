@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
 import { BsStar, BsStarFill } from 'react-icons/bs'
 
 export default function ProductCard({ product }) {
 
     const [cardActive, setCardActive] = useState({ status: false, index: null });
+
 
     return (
         <>
@@ -15,7 +17,9 @@ export default function ProductCard({ product }) {
                                 onMouseOver={() => setCardActive(prev => ({ ...prev, status: true, index }))}
                                 onMouseLeave={() => setCardActive(prev => ({ ...prev, status: false, index: null }))}
                             >
-                                <img title='items' className='h-full cursor-pointer' src={require("../images/items/mouse.png")} />
+                                <Link to={`product-details/pc & components/component & peripherals/mice/mc-08927929778717`}>
+                                    <img title='items' className='h-full cursor-pointer' src={require("../images/items/mouse.png")} />
+                                </Link>
                             </div>
                         </div>
                         <div className='h-[35%]  px-5 text-left'>
