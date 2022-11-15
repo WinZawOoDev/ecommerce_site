@@ -31,7 +31,7 @@ const SignOutIcon = () => <span className='font-semibold'><BsBoxArrowRight /></s
 
 export default function Header() {
 
-    const { UIView, setUIView, wishList } = useContext(AppContext);
+    const { UIView, changeUIView, totalWishlist, totalCartQty } = useContext(AppContext);
 
     //Curreny selection
     const currency = [{ id: 1, name: "USD", Label: MoneySignIcon }, { id: 2, name: "MMK", Label: MoneySignIcon }];
@@ -83,13 +83,13 @@ export default function Header() {
                     {/* UI View Switch */}
                     <div className='flex items-center justify-between border border-gray-200 bg-white rounded mr-11'>
                         <div
-                            onClick={() => setUIView(prev => ({ ...prev, grid: true, list: false }))}
+                            onClick={() => changeUIView({ grid: true, list: false })}
                             className={`text-xl m-1 p-1 cursor-pointer ${UIView.grid && 'bg-gray-200 rounded'} `}
                         >
                             <BsGrid />
                         </div>
                         <div
-                            onClick={() => setUIView(prev => ({ ...prev, list: true, grid: false }))}
+                            onClick={() => changeUIView({ list: true, grid: false })}
                             className={`text-xl m-1 p-1 cursor-pointer ${UIView.list && 'bg-gray-200 rounded'}`}
                         >
                             <BsListUl />
@@ -115,9 +115,7 @@ export default function Header() {
                             onMouseOut={() => { }}
                             className={`absolute h-auto z-50 w-full border-x border-x-gray-300 border-b border-b-gray-300 bg-white rounded-b-md shadow-lg ${!searchForm.showResult && "hidden"}`}>
                             <ul className='my-4 w-full'>
-                                {
-                                    searchResult.map((result, index) => <li key={index + 1} onClickCapture={() => closeSearchResult()} className='my-1 px-7 cursor-pointer hover:bg-gray-100 rounded text-gray-700 hover:text-gray-500 hover:px-5 py-1 text-sm'>{result}</li>)
-                                }
+                                {searchResult.map((result, index) => <li key={index + 1} onClickCapture={() => closeSearchResult()} className='my-1 px-7 cursor-pointer hover:bg-gray-100 rounded text-gray-700 hover:text-gray-500 hover:px-5 py-1 text-sm'>{result}</li>)}
                             </ul>
                         </div>
                     </div>
@@ -127,7 +125,7 @@ export default function Header() {
                         {/* Cart */}
                         <button className='relative ml-20 p-3 focus:outline-none'>
                             <div className='absolute -top-2 -right-1 bg-orange-600 border border-gray-200 px-[6px] py-[2px] rounded-[50%] shadow'>
-                                <span className='text-white text-xl'>0</span>
+                                <span className='text-white text-xl'>{totalCartQty()}</span>
                             </div>
                             <span className='text-4xl text-gray-500'><BsCart3 /></span>
                         </button>
@@ -136,7 +134,7 @@ export default function Header() {
                         {/* Wish List */}
                         <button className='relative flex items-center ml-10 p-3 focus:outline-none'>
                             <div className='absolute -top-2 -right-1 bg-orange-500 border border-gray-200 px-[6px] py-[2px] rounded-[50%] shadow'>
-                                <span className='text-white text-xl'>{wishList.length}</span>
+                                <span className='text-white text-xl'>{totalWishlist()}</span>
                             </div>
                             <span className='text-3xl text-gray-500'><BsSuitHeart /></span>
                             <span className='capitalize text-gray-400 text-lg mx-1'>wish list</span>

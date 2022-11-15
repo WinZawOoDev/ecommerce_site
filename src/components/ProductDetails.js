@@ -1,12 +1,14 @@
 import React, { useContext } from 'react'
 import { useImmer } from 'use-immer'
 import { useParams } from 'react-router-dom'
-import { BsChevronRight, BsStar, BsStarFill, BsHeart, BsHeartFill, BsShare } from 'react-icons/bs'
+import { BsChevronRight, BsStar, BsStarFill, BsHeart, BsHeartFill, BsShare, BsFillGeoAltFill, BsCashStack, BsQuestionCircle, BsFillReplyFill, BsShieldCheck } from 'react-icons/bs'
+import { AiOutlineFieldTime } from 'react-icons/ai'
+import { HiOutlineChatBubbleLeftRight } from 'react-icons/hi2'
 import { AppContext } from '../App';
 
 export default function ProductDetails() {
     const urlParams = useParams();
-    const { wishList, setWishList } = useContext(AppContext);
+    const { checkWishList, addToWishList, addToCart } = useContext(AppContext);
 
     const [product, setProduct] = useImmer({
         id: 1,
@@ -31,33 +33,34 @@ export default function ProductDetails() {
 
     const [qty, setQty] = useImmer({ current: 0, avaiable: product.total });
     const noQty = qty.current === 0;
-    const itmNotAvaiable = qty.current === product.total;
+    const itmNotAvaiable = qty.avaiable === 0;
 
     const decreQty = () => {
         if (noQty) return;
         setQty(prevQty => {
             prevQty.current--;
-            prevQty.avaiable++;
         });
     }
 
     const increQty = () => {
         if (itmNotAvaiable) return;
         setQty(prevQty => {
-            prevQty.current++;
-            prevQty.avaiable = product.total - prevQty.current;
+            if (prevQty.current < prevQty.avaiable)
+                prevQty.current++;
         });
     }
 
+    const handleAddToWishList = () => addToWishList({ id: product.id, name: product.name });
 
-    const handleWishList = () => setWishList(prev => {
-        const index = prev.findIndex(list => (list.id === product.id) && (list.name === product.name));
-        if (index)
-            prev.push({ id: product.id, name: product.name });
-        else
-            if (index !== -1) prev.splice(index, 1);
-    });
-
+    const handleAddToCart = () => {
+        if (!noQty && !itmNotAvaiable) {
+            addToCart({ id: product.id, name: product.name, qty: qty.current });
+            setQty(prevQty => {
+                prevQty.avaiable = prevQty.avaiable - prevQty.current;
+                prevQty.current = 0;
+            });
+        }
+    };
 
     return (
         <div className='container mx-auto'>
@@ -101,8 +104,8 @@ export default function ProductDetails() {
                                 <span className='font-medium'>1500,000</span>
                             </div>
                             <div className='flex items-center text-gray-600'>
-                                <button onClick={() => handleWishList()}>
-                                    {wishList.find(list => (list.id === product.id) && (list.name === product.name)) ? <BsHeartFill className='text-2xl' /> : <BsHeart className='text-2xl' />}
+                                <button onClick={() => handleAddToWishList()}>
+                                    {checkWishList({ id: product.id, name: product.name }) ? <BsHeartFill className='text-2xl' /> : <BsHeart className='text-2xl' />}
                                 </button>
                                 <button><BsShare className='ml-6 text-2xl' /></button>
                             </div>
@@ -111,23 +114,96 @@ export default function ProductDetails() {
                             <span className='font-light text-sm block text-gray-600'>Quantity : </span>
                             <div className='flex items-center mt-2'>
                                 <button onClick={() => decreQty()} className={`px-6 border border-gray-300 rounded text-2xl text-gray-500 outline-none transition duration-500 ease-in-out ${noQty && "cursor-default border-gray-100 text-gray-200"}`}>-</button>
-                                <span className='mx-3 text-2xl text-gray-700'>{qty.current}</span>
-                                <button onClick={() => increQty()} className={`px-6 border border-gray-300 rounded text-2xl text-gray-500 outline-none transition duration-500 ease-in-out ${itmNotAvaiable && "cursor-default border-gray-100 text-gray-200"}`}>+</button>
+                                <span className={`mx-3 text-2xl text-gray-700 transition duration-500 ease-in-out ${itmNotAvaiable && "text-gray-400"}`}>{qty.current}</span>
+                                <button onClick={() => increQty()} className={`px-6 border border-gray-300 rounded text-2xl text-gray-500 outline-none transition duration-500 ease-in-out ${(itmNotAvaiable || (qty.current === qty.avaiable)) && "cursor-default border-gray-100 text-gray-200"}`}>+</button>
                                 <span className={`mx-5 font-thin ${itmNotAvaiable && "line-through"}`}>{itmNotAvaiable ? "no" : qty.avaiable} items aviables</span>
                             </div>
                         </div>
                     </div>
                     <div className='my-2'>
-                        <button className={`px-6 py-2 mr-5 bg-red-700 rounded-md border border-gray-200 shadow-sm outline-none transition duration-500 ease-in-out ${noQty && "bg-red-200 border-gray-50 cursor-default"}`}>
+                        <button className={`px-6 py-2 mr-5 bg-red-700 rounded-md border border-gray-200 shadow-sm outline-none transition duration-500 ease-in-out ${(noQty || itmNotAvaiable) && "bg-red-200 border-gray-50 cursor-default"}`}>
                             <span className='text-white font-semibold'>Buy Now</span>
                         </button>
-                        <button className={`px-6 py-2 ml-5 bg-orange-500 rounded-md border border-gray-200 shadow-sm outline-none transition duration-500 ease-in-out ${noQty && "bg-orange-200 border-gray-50 cursor-default"}`}>
+                        <button onClick={() => handleAddToCart()} className={`px-6 py-2 ml-5 bg-orange-500 rounded-md border border-gray-200 shadow-sm outline-none transition duration-500 ease-in-out ${(noQty || itmNotAvaiable) && "bg-orange-200 border-gray-50 cursor-default"}`}>
                             <span className='text-white font-semibold'>Add to Cart</span>
                         </button>
                     </div>
                 </div>
-                <div className=' h-96 w-1/4 m-1'>
-
+                <div className='w-1/4 m-1 px-5'>
+                    <div className='border border-gray-300  rounded'>
+                        <div className='border-b border-gray-300 flex items-center justify-between p-2'>
+                            <div className='m-1'>
+                                <span className='block capitalize text-xs text-gray-700'>delivery</span>
+                                <div className='flex items-center'>
+                                    <BsFillGeoAltFill className='text-lg text-gray-600' />
+                                    <div className='text-sm font-thin m-2'>
+                                        <p>Yangon, Yangon City </p>
+                                        <p>Hlaing township</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <span className='block uppercase text-xs text-cyan-600 cursor-pointer font-medium'>change</span>
+                        </div>
+                        <div className='border-b border-gray-300 flex items-center justify-between p-2'>
+                            <div className='m-1'>
+                                <div className='my-2'>
+                                    <div className='flex items-center'>
+                                        <AiOutlineFieldTime className='text-xl text-gray-700' />
+                                        <span className='text-xs font-light block ml-2'>Delivery Standard Time</span>
+                                    </div>
+                                    <span className='text-xs font-thin block mt-1 ml-7'> 4 - 7 Days</span>
+                                </div>
+                                <div className='flex my-2 items-center'>
+                                    <BsCashStack className='text-xl text-gray-700' />
+                                    <span className='text-xs font-light block ml-2'>Cash on Delivery availables</span>
+                                </div>
+                            </div>
+                            <span className='block uppercase text-sm text-gray-600 font-medium'>2,500ks</span>
+                        </div>
+                        <div className='border-b border-gray-300 flex justify-between p-2'>
+                            <div className='m-1'>
+                                <span className='text-sm font-thin'>Service</span>
+                                <div className='mb-2 mt-1'>
+                                    <div className='flex items-center'>
+                                        <BsFillReplyFill className='text-2xl text-gray-600' />
+                                        <span className='text-xs font-light block ml-2'>7 days return</span>
+                                    </div>
+                                </div>
+                                <div className='flex mb-2 mt-3 items-center'>
+                                    <BsShieldCheck className='text-xl text-gray-700' />
+                                    <span className='text-xs font-light block ml-2'>1 year warranty by supplier</span>
+                                </div>
+                            </div>
+                            <span className='block mt-3 uppercase text-sm text-gray-600 font-medium'><BsQuestionCircle /></span>
+                        </div>
+                        <div className='p-2'>
+                            <div className='m-1 flex justify-between'>
+                                <div>
+                                    <span className='text-sm font-thin'>Sold By</span>
+                                    <span className='block capitalize text-sm text-gray-700 mt-2'>tech accessories vendors</span>
+                                </div>
+                                <div className='mt-3'>
+                                    <button className='block text-sm text-gray-600 '><BsQuestionCircle /></button>
+                                    <button><HiOutlineChatBubbleLeftRight className='text-cyan-600 text-2xl mt-2 -ml-1' /></button>
+                                </div>
+                            </div>
+                            <hr className='m-3' />
+                            <div className='flex justify-between  mx-1 pb-2'>
+                                <div className='relative py-3 text-center min-h-[7.5em]'>
+                                    <span className='block text-sm font-light text-gray-500 capitalize'>customer's positive reviews</span>
+                                    <span className='block absolute bottom-0 inset-x-0 text-gray-600'>90%</span>
+                                </div>
+                                <div className='relative p-3 text-center min-h-[7.5em]'>
+                                    <span className='block text-sm font-light text-gray-500 capitalize'>ship on time</span>
+                                    <span className='block absolute bottom-0 inset-x-0 text-gray-600'>85%</span>
+                                </div>
+                                <div className='relative py-3 text-center min-h-[7.5em]'>
+                                    <span className='block text-sm font-light text-gray-500 capitalize'>response</span>
+                                    <span className='block absolute bottom-0 inset-x-0 text-gray-600'>100%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -221,7 +297,7 @@ function ViewImage({ images, handleChangeImage }) {
                 </div>
             </div>
             <div
-                className={`${!visible && "hidden"} absolute pointer-events-none right-[20em]  min-w-[45em] min-h-[45em] max-w-[45em] max-h-[45em] bg-no-repeat bg-cover bg-white z-50 border border-gray-300 rounded shadow-2xl overflow-hidden`}
+                className={`${!visible && "hidden"} absolute pointer-events-none right-[12em]  min-w-[53em] min-h-[53em] max-w-[53em] max-h-[53em] bg-no-repeat bg-cover bg-white z-50 border border-gray-300 rounded shadow-2xl overflow-hidden`}
                 style={{
                     backgroundImage: `url('${require("../images" + images.find(image => image.view === true)?.src)}')`,
                     backgroundSize: `${img.width * zoomLevel}px ${img.height * zoomLevel}px`,
