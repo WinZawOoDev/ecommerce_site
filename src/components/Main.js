@@ -5,6 +5,7 @@ import Body from './Body'
 import Footer from './Footer'
 import OneCategory from './OneCategory'
 import ProductDetails from './ProductDetails'
+import CartView from './CartView'
 
 export default function Main() {
 
@@ -23,6 +24,7 @@ export default function Main() {
                 <Route path='/' element={<Body />} />
                 <Route path='category/:mainCategory/:subCategory/:product' element={<OneCategory />} />
                 <Route path='product-details/:mainCategory/:subCategory/:product/:producId' element={<ProductDetails />} />
+                <Route path='view-cart' element={<CartView />} />
             </Routes>
             <Footer />
         </div>

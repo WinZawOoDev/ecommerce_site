@@ -11,42 +11,53 @@ function App() {
   const changeUIView = ({ grid, list }) => setUIView(prev => ({ ...prev, grid, list }));
 
   const [cart, setCart] = useImmer([]);
-  const totalCartQty = () => {
-    let total;
-    if (cart.length === 0)
-      total = cart.length;
-    else
-      total = cart.reduce((prev, current) => {
-        if (prev.qty)
-          return prev.qty + current.qty;
-        else
-          return current.qty;
-      }, 0);
-    return total;
-  }
+
+  const totalCart = () => cart.length;
+
+  const totalCartQty = () => cart.reduce((accumulator, currentValue) => accumulator + currentValue.qty, 0)
 
   const addToCart = ({ id, name, qty }) => setCart(prev => {
-    const index = prev.findIndex(list => (list.id === id) && (list.name === name));
-    if (index !== -1)
+    const index = findArrObjIndex({ id, name }, prev);
+    if (notNegaNumb(index))
       prev[index].qty = prev[index].qty + qty;
     else
       prev.push({ id, name, qty });
   });
 
+  const increCartQty = ({ id, name }) => setCart(prev => {
+    const index = findArrObjIndex({ id, name }, prev);
+    if (notNegaNumb(index))
+      prev[index].qty++;
+  });
+
+  const decreCartQty = ({ id, name }) => setCart(prev => {
+    const index = findArrObjIndex({ id, name }, prev);
+    if ((notNegaNumb(index)) && (prev[index].qty !== 0))
+      prev[index].qty--;
+  });
+
+
+  const deleteCart = ({ id, name }) => setCart(prev => {
+    const index = findArrObjIndex({ id, name }, prev);
+    if (notNegaNumb(index)) prev.splice(index, 1);
+  })
 
   const [wishList, setWishList] = useImmer([]);
   const checkWishList = ({ id, name }) => wishList.some(list => (list.id === id) && (list.name === name));
   const totalWishlist = () => wishList.length;
   const addToWishList = ({ id, name }) => setWishList(prev => {
-    const index = prev.findIndex(list => (list.id === id) && (list.name === name));
-    if (index)
-      prev.push({ id, name });
+    const index = findArrObjIndex({ id, name }, prev);
+    if (notNegaNumb(index))
+      prev.splice(index, 1);
     else
-      if (index !== -1) prev.splice(index, 1);
+      prev.push({ id, name });
   });
 
 
-  const appProvider = { UIView, changeUIView, checkWishList, totalWishlist, addToWishList, totalCartQty, addToCart }
+  const findArrObjIndex = ({ id, name }, arr) => arr.findIndex(list => (list.id === id) && (list.name === name));
+  const notNegaNumb = numb => numb !== -1;
+
+  const appProvider = { UIView, changeUIView, checkWishList, totalWishlist, addToWishList, cart, totalCart, totalCartQty, addToCart, increCartQty, decreCartQty, deleteCart }
 
   return (
     <BrowserRouter>

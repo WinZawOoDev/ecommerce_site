@@ -123,12 +123,12 @@ export default function Header() {
 
                     <div className='flex items-center'>
                         {/* Cart */}
-                        <button className='relative ml-20 p-3 focus:outline-none'>
+                        <Link to={"view-cart"} className='relative ml-20 p-3 focus:outline-none'>
                             <div className='absolute -top-2 -right-1 bg-orange-600 border border-gray-200 px-[6px] py-[2px] rounded-[50%] shadow'>
                                 <span className='text-white text-xl'>{totalCartQty()}</span>
                             </div>
                             <span className='text-4xl text-gray-500'><BsCart3 /></span>
-                        </button>
+                        </Link>
 
 
                         {/* Wish List */}
