@@ -1,10 +1,9 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React from 'react'
 import { useImmer } from 'use-immer';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
 import { BsX, BsDash, BsPlus, BsCartX } from 'react-icons/bs'
-import { AppContext } from '../App'
-import { products } from '../dummyData/Products';
-
+import { selectProductFromCart, selectTotalCart, selectTotalCartQty, increCartQty, decreCartQty, deleteCart } from '../app/cartSlice'
 
 
 const mayLikeItem = [
@@ -15,48 +14,13 @@ const mayLikeItem = [
 
 export default function CartView() {
 
-  const { cart, totalCart, totalCartQty, increCartQty, decreCartQty, deleteCart } = useContext(AppContext);
+  const { items, ordSummary } = useSelector(selectProductFromCart);
+  const totalCart = useSelector(selectTotalCart);
+  const totalCartQty = useSelector(selectTotalCartQty);
+
+  const dispatch = useDispatch();
 
   const [tData, setTData] = useImmer([]);
-  const [ordSummery, setOrdSummery] = useImmer([
-    { id: 1, name: "Subtotal", value: 0, currency: "MMK" },
-    { id: 2, name: "Estimated shipping fee", value: 40000, currency: "MMK" },
-    { id: 3, name: "Estimated tax fee", value: 3000, currency: "MMK" }
-  ]);
-
-  const getProduct = () => {
-    let totalPrice = 0;
-    cart.forEach((c) => {
-      products.forEach(product => {
-        if ((c.id === product.id) && (c.name === product.name)) {
-          setTData(prev => {
-            prev.push({
-              id: product.id,
-              name: product.name,
-              productDetail: {
-                img: product.images[0].src,
-                desc: product.description,
-                brand: product.brand,
-                stock: 5
-              },
-              quantity: c.qty,
-              price: product.price
-            })
-          });
-          totalPrice += product.price * c.qty;
-        }
-      })
-    })
-    return totalPrice;
-  }
-
-  useEffect(() => {
-    const totalPrice = getProduct();
-    setOrdSummery(prev => {
-      const index = prev.findIndex(list => list.name === "Subtotal");
-      prev[index].value = totalPrice;
-    })
-  }, []);
 
 
   const findArrObjIndex = ({ id, name }, arr) => arr.findIndex(list => (list.id === id) && (list.name === name));
@@ -66,44 +30,9 @@ export default function CartView() {
     return index !== -1 && tData[index].productDetail.stock === 0;
   }
 
-  const isCartEmpty = () => totalCart() === 0;
+  const isCartEmpty = () => items.length === 0;
 
-  const handleDelete = ({ id, name }) => {
-    deleteCart({ id, name });
-    setTData(prev => {
-      const index = findArrObjIndex({ id, name }, prev);
-      if (index !== -1) prev.splice(index, 1);
-    })
-  }
-
-
-  const handleQtyIncrease = ({ id, name }) => {
-    if (isStockOut({ id, name })) return;
-    increCartQty({ id, name });
-    setTData(prev => {
-      const index = findArrObjIndex({ id, name }, prev);
-      prev[index].quantity++;
-      prev[index].productDetail.stock--;
-    });
-  }
-
-  const handleQtyDecrease = ({ id, name }) => {
-    decreCartQty({ id, name });
-    setTData(prev => {
-      const index = findArrObjIndex({ id, name }, prev)
-      if (index !== -1) {
-        if (prev[index].quantity === 1)
-          handleDelete({ id, name });
-        else {
-          prev[index].quantity--;
-          prev[index].productDetail.stock++;
-        }
-      }
-    })
-
-  }
-
-  const totalOrderPrice = () => ordSummery.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0);
+  const totalOrderPrice = () => ordSummary.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0);
 
   return (
     <div className='container mx-auto'>
@@ -124,9 +53,9 @@ export default function CartView() {
                   <div className='flex justify-between items-center pb-5 px-1 border-b border-b-gray-200'>
                     <span className='text-lg text-gray-800'>Your  Cart</span>
                     <div>
-                      <span className='text-gray-600 mx-2'>{totalCartQty()}</span>
+                      <span className='text-gray-600 mx-2'>{totalCartQty}</span>
                       <span className='text-gray-600 font-light'>total quantity of </span>
-                      <span className='text-gray-600 mx-2'>{totalCart()}</span>
+                      <span className='text-gray-600 mx-2'>{totalCart}</span>
                       <span className='text-gray-600 font-light'>items</span>
                     </div>
                   </div>
@@ -142,7 +71,7 @@ export default function CartView() {
                       </thead>
                       <tbody>
                         {
-                          tData.map((data, index) => (
+                          items.map((data, index) => (
                             <tr key={index + 1}>
                               <td className='font-light text-gray-600 inline-flex items-center py-4'>
                                 <img className="object-contain max-w-[5em]" src={require(`../images${data.productDetail.img}`)} />
@@ -162,14 +91,14 @@ export default function CartView() {
                               <td className='py-4'>
                                 <div className='flex items-center justify-center'>
                                   <button
-                                    onClick={() => handleQtyDecrease({ id: data.id, name: data.name })}
+                                    onClick={() => dispatch(decreCartQty({ id: data.id, name: data.name }))}
                                     className='border border-gray-300 px-2 py-1 rounded outline-none'
                                   >
                                     <BsDash />
                                   </button>
                                   <span className='px-5 text-lg font-medium text-gray-600'>{data.quantity}</span>
                                   <button
-                                    onClick={() => handleQtyIncrease({ id: data.id, name: data.name })}
+                                    onClick={() => dispatch(increCartQty({ id: data.id, name: data.name }))}
                                     className={`border border-gray-300 px-2 py-1 rounded outline-none transition duration-200 ease-in-out ${isStockOut({ id: data.id, name: data.name }) && "border-gray-100 text-gray-200 pointer-events-none"}`}
                                   >
                                     <BsPlus />
@@ -185,11 +114,11 @@ export default function CartView() {
                               <td className='py-4 font-light text-gray-600 px-5'>
                                 <div className='flex justify-between items-center'>
                                   <span className='text-sm -mr-4'>MMK</span>
-                                  <span className='-ml-3'>{(data.price * data.quantity).toLocaleString()}</span>
+                                  <span className='-ml-3'>{data.totalPrice.toLocaleString()}</span>
                                 </div>
                               </td>
                               <td className='text-center py-4 px-3'>
-                                <button onClick={() => handleDelete({ id: data.id, name: data.name })} className='outline-none'>
+                                <button onClick={() => dispatch(deleteCart({ id: data.id, name: data.name }))} className='outline-none'>
                                   <BsX className='text-red-800 text-lg' />
                                 </button>
                               </td>
@@ -208,7 +137,7 @@ export default function CartView() {
                 <hr />
                 <div className='py-5 border-b border-gray-300'>
                   {
-                    ordSummery.map(summary => (
+                    ordSummary.map(summary => (
                       <div key={summary.id} className='relative flex justify-between items-center p-2'>
                         <div className='w-2/3'>
                           <span className='font-light text-sm text-gray-700 '>{summary.name}</span>

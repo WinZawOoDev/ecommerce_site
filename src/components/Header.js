@@ -1,5 +1,8 @@
 import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { selectTotalCartQty } from '../app/cartSlice'
+import { selectTotalWishList } from '../app/wishListSlice'
 import { Menu, Listbox } from '@headlessui/react'
 import { AppContext } from '../App';
 import {
@@ -31,7 +34,10 @@ const SignOutIcon = () => <span className='font-semibold'><BsBoxArrowRight /></s
 
 export default function Header() {
 
-    const { UIView, changeUIView, totalWishlist, totalCartQty } = useContext(AppContext);
+    const totalCartQty = useSelector(selectTotalCartQty);
+    const totalWishlist = useSelector(selectTotalWishList);
+    
+    const { UIView, changeUIView } = useContext(AppContext);
 
     //Curreny selection
     const currency = [{ id: 1, name: "USD", Label: MoneySignIcon }, { id: 2, name: "MMK", Label: MoneySignIcon }];
@@ -125,7 +131,7 @@ export default function Header() {
                         {/* Cart */}
                         <Link to={"view-cart"} className='relative ml-20 p-3 focus:outline-none'>
                             <div className='absolute -top-2 -right-1 bg-orange-600 border border-gray-200 px-[6px] py-[2px] rounded-[50%] shadow'>
-                                <span className='text-white text-xl'>{totalCartQty()}</span>
+                                <span className='text-white text-xl'>{totalCartQty}</span>
                             </div>
                             <span className='text-4xl text-gray-500'><BsCart3 /></span>
                         </Link>
@@ -134,7 +140,7 @@ export default function Header() {
                         {/* Wish List */}
                         <button className='relative flex items-center ml-10 p-3 focus:outline-none'>
                             <div className='absolute -top-2 -right-1 bg-orange-500 border border-gray-200 px-[6px] py-[2px] rounded-[50%] shadow'>
-                                <span className='text-white text-xl'>{totalWishlist()}</span>
+                                <span className='text-white text-xl'>{totalWishlist}</span>
                             </div>
                             <span className='text-3xl text-gray-500'><BsSuitHeart /></span>
                             <span className='capitalize text-gray-400 text-lg mx-1'>wish list</span>

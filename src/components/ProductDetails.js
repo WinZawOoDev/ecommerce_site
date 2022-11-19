@@ -1,6 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { useImmer } from 'use-immer'
 import { useParams } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { addToCart } from '../app/cartSlice'
+import { addToWishList, selectCheckWhishList } from '../app/wishListSlice'
 import {
     BsChevronRight,
     BsStar,
@@ -17,12 +20,14 @@ import {
 } from 'react-icons/bs'
 import { AiOutlineFieldTime } from 'react-icons/ai'
 import { HiOutlineChatBubbleLeftRight } from 'react-icons/hi2'
-import { AppContext } from '../App';
 import { products } from '../dummyData/Products';
 
 export default function ProductDetails() {
+
     const urlParams = useParams();
-    const { checkWishList, addToWishList, addToCart } = useContext(AppContext);
+    const dispatch = useDispatch();
+
+    const checkWishList = useSelector(state => selectCheckWhishList(state, { id: 1, name: "logiTech G502 mouse" }));
 
     const [product, setProduct] = useImmer(products[0]);
 
@@ -60,11 +65,11 @@ export default function ProductDetails() {
         });
     }
 
-    const handleAddToWishList = () => addToWishList({ id: product.id, name: product.name });
+    const handleAddToWishList = () => dispatch(addToWishList({ id: product.id, name: product.name }));
 
     const handleAddToCart = () => {
         if (!noQty && !itmNotAvaiable) {
-            addToCart({ id: product.id, name: product.name, qty: qty.current });
+            dispatch(addToCart({ id: product.id, name: product.name, qty: qty.current }));
             setQty(prevQty => {
                 prevQty.avaiable = prevQty.avaiable - prevQty.current;
                 prevQty.current = 0;
@@ -115,7 +120,7 @@ export default function ProductDetails() {
                             </div>
                             <div className='flex items-center text-gray-600'>
                                 <button onClick={() => handleAddToWishList()}>
-                                    {checkWishList({ id: product.id, name: product.name }) ? <BsHeartFill className='text-2xl' /> : <BsHeart className='text-2xl' />}
+                                    {checkWishList ? <BsHeartFill className='text-2xl' /> : <BsHeart className='text-2xl' />}
                                 </button>
                                 <button><BsShare className='ml-6 text-2xl' /></button>
                             </div>
