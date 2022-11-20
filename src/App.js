@@ -1,5 +1,4 @@
 import { useState, createContext } from "react";
-import { BrowserRouter } from 'react-router-dom'
 import Main from "./components/Main";
 
 export const AppContext = createContext(null);
@@ -13,12 +12,9 @@ function App() {
   const appProvider = { UIView, changeUIView }
 
   return (
-    <BrowserRouter>
-      <AppContext.Provider value={appProvider}>
-        <Main />
-      </AppContext.Provider>
-    </BrowserRouter>
-
+    <AppContext.Provider value={appProvider}>
+      <Main />
+    </AppContext.Provider>
   );
 }
 export default App;

@@ -6,6 +6,7 @@ import Footer from './Footer'
 import OneCategory from './OneCategory'
 import ProductDetails from './ProductDetails'
 import CartView from './CartView'
+import DeliveryInfo from './DeliveryInfo'
 
 export default function Main() {
 
@@ -22,9 +23,15 @@ export default function Main() {
             <Header />
             <Routes>
                 <Route path='/' element={<Body />} />
-                <Route path='category/:mainCategory/:subCategory/:product' element={<OneCategory />} />
+                <Route path='category/:mainCategory/:subCategory/:product' element={<><Outlet /></>}>
+                    <Route index element={<OneCategory />} />
+                    <Route path='product-details/:mainCategory/:subCategory/:product/:producId' element={<ProductDetails />} />
+                </Route>
                 <Route path='product-details/:mainCategory/:subCategory/:product/:producId' element={<ProductDetails />} />
-                <Route path='view-cart' element={<CartView />} />
+                <Route path='view-cart' element={<><Outlet /></>}>
+                    <Route index element={<CartView />} />
+                    <Route path='deli-info' element={<DeliveryInfo />} />
+                </Route>
             </Routes>
             <Footer />
         </div>

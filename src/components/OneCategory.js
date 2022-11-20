@@ -14,8 +14,6 @@ const people = [
     { name: 'Hellen Schmidt' },
 ]
 
-
-
 const category_types = [
     {
         title: "brands",
@@ -142,7 +140,6 @@ const category_types = [
 ]
 
 
-
 function ListBox() {
     const [selected, setSelected] = useState(people[0])
 
@@ -199,7 +196,6 @@ function ListBox() {
         </div>
     )
 }
-
 
 
 export default function OneCategory() {
