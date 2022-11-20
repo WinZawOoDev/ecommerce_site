@@ -20,12 +20,20 @@ const cartSlice = createSlice({
         },
         decreCartQty(state, action) {
             const { id, name } = action.payload;
-            const cartExist = state.find(cart => (cart.id === id) && (cart.name === name));
-            if (cartExist) cartExist.qty--;
+            const index = state.findIndex(list => (list.id === id) && (list.name === name));
+            if (index !== -1) {
+                if (state[index].qty === 1)
+                    state.splice(index, 1);
+                else
+                    state[index].qty--;
+            }
+
         },
         deleteCart(state, action) {
             const { id, name } = action.payload;
-            state = state.filter(cart => (cart.id !== id) && (cart.name !== name));
+            const index = state.findIndex(list => (list.id === id) && (list.name === name));
+            if (index !== -1)
+                state.splice(index, 1);
         }
     }
 })

@@ -7,9 +7,10 @@ import { selectProductFromCart, selectTotalCart, selectTotalCartQty, increCartQt
 
 
 const mayLikeItem = [
-  { id: 1, desc: "Men Flip Flops (leather)", img: "/may_like_itm/baby_clothes.png" },
-  { id: 2, desc: "2-8-year-old Girls' shorts wear summer style children's clothes", img: "/may_like_itm/girl_pant.png" },
-  { id: 3, desc: "Baby 3pk Zip-Up Sleep N' Play - Cloud Island™ Black/White", img: "/may_like_itm/slipper.png" }
+  { id: 1, price: 5000, desc: "Men Flip Flops (leather)", img: "/may_like_itm/baby_clothes.png" },
+  { id: 2, price: 7000, desc: "2-8-year-old Girls' shorts wear summer style children's clothes", img: "/may_like_itm/girl_pant.png" },
+  { id: 3, price: 15000, desc: "Baby 3pk Zip-Up Sleep N' Play - Cloud Island™ Black/White", img: "/may_like_itm/slipper.png" },
+  { id: 4, price: 3000, desc: "Women Winter Hat Thermal Windproof Hat Ribbed Knit Chunky Lined Beanie Hats", img: "/may_like_itm/winter_hat.png" }
 ];
 
 export default function CartView() {
@@ -183,7 +184,7 @@ export default function CartView() {
                     <div className='bg-gray-100 rounded p-5'>
                       <div className='flex justify-between items-center mt-3 mb-5'>
                         <p className='text-sm text-gray-700 truncate'>{d.desc}</p>
-                        <span className='bg-red-200 rounded-md px-5 ml-2 text-gray-800 fond-medium'>2000</span>
+                        <span className='bg-red-200 rounded-md px-5 ml-2 text-gray-800 fond-medium'>{d.price.toLocaleString('en-US')}</span>
                       </div>
                       <img className='h-[15em] mx-auto cursor-pointer' src={require(`../images${d.img}`)} />
                     </div>

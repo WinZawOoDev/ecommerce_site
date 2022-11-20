@@ -36,7 +36,7 @@ export default function Header() {
 
     const totalCartQty = useSelector(selectTotalCartQty);
     const totalWishlist = useSelector(selectTotalWishList);
-    
+
     const { UIView, changeUIView } = useContext(AppContext);
 
     //Curreny selection
