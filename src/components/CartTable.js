@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { selectProductFromCart, selectTotalCart, selectTotalCartQty, increCartQty, decreCartQty, deleteCart } from '../app/cartSlice'
 import { BsX, BsDash, BsPlus } from 'react-icons/bs'
 
-export default function CartTable({ isStockOut }) {
+export default function CartTable({ isStockOut, increOrDecreQty }) {
 
     const dispatch = useDispatch();
     const { items } = useSelector(selectProductFromCart);
@@ -12,7 +12,7 @@ export default function CartTable({ isStockOut }) {
 
 
     return (
-        <div className='py-7 px-5'>
+        <div className=' bg-white rounded py-7 px-5 max-h-[45em] min-h-[40em] overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-thumb-rounded-md scrollbar-track-rounded-md'>
             <div className='flex justify-between items-center pb-5 px-1 border-b border-b-gray-200'>
                 <span className='text-lg text-gray-800'>Your  Cart</span>
                 <div>
@@ -51,22 +51,28 @@ export default function CartTable({ isStockOut }) {
 
                                         </div>
                                     </td>
-                                    <td className='py-4'>
-                                        <div className='flex items-center justify-center'>
-                                            <button
-                                                onClick={() => dispatch(decreCartQty({ id: data.id, name: data.name }))}
-                                                className='border border-gray-300 px-2 py-1 rounded outline-none'
-                                            >
-                                                <BsDash />
-                                            </button>
-                                            <span className='px-5 text-lg font-medium text-gray-600'>{data.quantity}</span>
-                                            <button
-                                                onClick={() => dispatch(increCartQty({ id: data.id, name: data.name }))}
-                                                className={`border border-gray-300 px-2 py-1 rounded outline-none transition duration-200 ease-in-out ${isStockOut({ id: data.id, name: data.name }) && "border-gray-100 text-gray-200 pointer-events-none"}`}
-                                            >
-                                                <BsPlus />
-                                            </button>
-                                        </div>
+                                    <td className='py-4 text-center'>
+                                        {
+                                            increOrDecreQty ?
+                                                <div className='flex items-center justify-center'>
+                                                    <button
+                                                        onClick={() => dispatch(decreCartQty({ id: data.id, name: data.name }))}
+                                                        className='border border-gray-300 px-2 py-1 rounded outline-none'
+                                                    >
+                                                        <BsDash />
+                                                    </button>
+                                                    <span className='px-5 text-lg font-medium text-gray-600'>{data.quantity}</span>
+                                                    <button
+                                                        onClick={() => dispatch(increCartQty({ id: data.id, name: data.name }))}
+                                                        className={`border border-gray-300 px-2 py-1 rounded outline-none transition duration-200 ease-in-out ${isStockOut({ id: data.id, name: data.name }) && "border-gray-100 text-gray-200 pointer-events-none"}`}
+                                                    >
+                                                        <BsPlus />
+                                                    </button>
+                                                </div>
+                                                :
+                                                <span className='px-5 text-lg font-medium text-gray-600'>{data.quantity}</span>
+                                        }
+
                                     </td>
                                     <td className='py-4 font-light text-gray-600 px-5'>
                                         <div className='flex justify-between items-center'>
@@ -97,6 +103,7 @@ export default function CartTable({ isStockOut }) {
 
 
 CartTable.defaultProps = {
+    increOrDecreQty: true,
     isStockOut: () => { },
     decreCartQty: () => { },
     increCartQty: () => { },

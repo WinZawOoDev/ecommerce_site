@@ -7,6 +7,7 @@ import OneCategory from './OneCategory'
 import ProductDetails from './ProductDetails'
 import CartView from './CartView'
 import DeliveryInfo from './DeliveryInfo'
+import EmptyCart from './EmptyCart'
 
 export default function Main() {
 
@@ -30,8 +31,13 @@ export default function Main() {
                 <Route path='product-details/:mainCategory/:subCategory/:product/:producId' element={<ProductDetails />} />
                 <Route path='view-cart' element={<><Outlet /></>}>
                     <Route index element={<CartView />} />
-                    <Route path='deli-info' element={<DeliveryInfo />} />
+                    <Route path='deli-info' element={<><Outlet /></>}>
+                        <Route index element={<DeliveryInfo />} />
+                        <Route path='empty-cart' element={<EmptyCart />} />
+                    </Route>
+                    <Route path='empty-cart' element={<EmptyCart />} />
                 </Route>
+                <Route path='empty-cart' element={<EmptyCart />} />
             </Routes>
             <Footer />
         </div>

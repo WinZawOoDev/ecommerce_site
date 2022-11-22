@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { selectTotalCartQty } from '../app/cartSlice'
+import { selectTotalCartQty, selectIsCartEmpty } from '../app/cartSlice'
 import { selectTotalWishList } from '../app/wishListSlice'
 import { Menu, Listbox } from '@headlessui/react'
 import { AppContext } from '../App';
@@ -36,6 +36,7 @@ export default function Header() {
 
     const totalCartQty = useSelector(selectTotalCartQty);
     const totalWishlist = useSelector(selectTotalWishList);
+    const isCartEmpty = useSelector(selectIsCartEmpty);
 
     const { UIView, changeUIView } = useContext(AppContext);
 
@@ -129,7 +130,7 @@ export default function Header() {
 
                     <div className='flex items-center'>
                         {/* Cart */}
-                        <Link to={"view-cart"} className='relative ml-20 p-3 focus:outline-none'>
+                        <Link to={isCartEmpty ? "empty-cart" : "view-cart"} className='relative ml-20 p-3 focus:outline-none'>
                             <div className='absolute -top-2 -right-1 bg-orange-600 border border-gray-200 px-[6px] py-[2px] rounded-[50%] shadow'>
                                 <span className='text-white text-xl'>{totalCartQty}</span>
                             </div>

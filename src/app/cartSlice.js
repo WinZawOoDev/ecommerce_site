@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { AiFillExperiment } from 'react-icons/ai';
 import { products } from '../dummyData/Products';
 
 const cartSlice = createSlice({
@@ -39,6 +40,8 @@ const cartSlice = createSlice({
 })
 
 export const selectTotalCart = ({ cart }) => cart.length;
+
+export const selectIsCartEmpty = ({ cart }) => cart.length === 0;
 
 export const selectTotalCartQty = ({ cart }) => cart.reduce((accumulator, currentValue) => accumulator + currentValue.qty, 0);
 

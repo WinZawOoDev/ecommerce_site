@@ -1,9 +1,8 @@
 import React from 'react'
 import { useImmer } from 'use-immer';
-import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux'
-import { BsCartX } from 'react-icons/bs'
-import { selectProductFromCart } from '../app/cartSlice'
+import { useNavigate } from 'react-router-dom'
+import { selectProductFromCart, selectIsCartEmpty } from '../app/cartSlice'
 import CartTable from './CartTable';
 import OrderSummary from './OrderSummary';
 
@@ -18,6 +17,7 @@ const mayLikeItem = [
 export default function CartView() {
 
   const { items } = useSelector(selectProductFromCart);
+  const isCartEmpty = useSelector(selectIsCartEmpty);
 
   const [tData, setTData] = useImmer([]);
 
@@ -29,50 +29,39 @@ export default function CartView() {
     return index !== -1 && tData[index].productDetail.stock === 0;
   }
 
-  const isCartEmpty = () => items.length === 0;
+
+  const navigate = useNavigate();
+
+  if (isCartEmpty) navigate("empty-cart");
 
 
   return (
     <div className='container mx-auto'>
-      {
-        isCartEmpty() ?
-          <div className='min-h-[30em] flex justify-center items-center bg-white rounded'>
-            <BsCartX className='text-9xl text-red-600' />
-            <div className='ml-16'>
-              <span className='block text-2xl font-medium text-gray-600 my-3'>Your cart is empty</span>
-              <Link to="/" className='text-cyan-600 underline font-light text-lg'>please go to shop</Link>
-            </div>
-          </div>
-          :
-          <>
-            <div className='grid grid-cols-6 gap-x-2'>
-              <div className='col-span-4 bg-white rounded max-h-[45em] overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-thumb-rounded-md scrollbar-track-rounded-md'>
-                <CartTable isStockOut={isStockOut} />
-              </div>
-              <div className='col-span-2 bg-white rounded px-5'>
-                <OrderSummary />
-              </div>
-            </div>
-            <div className='mt-2 text-center pt-3'>
-              <span className='text-xl text-gray-700'>You may also like</span>
-              <div className='grid grid-cols-4 gap-x-2 p-5 mt-3 bg-white rounded'>
-                {
-                  mayLikeItem.map(d =>
-                    <div className='bg-gray-100 rounded p-5'>
-                      <div className='flex justify-between items-center mt-3 mb-5'>
-                        <p className='text-sm text-gray-700 truncate'>{d.desc}</p>
-                        <span className='bg-red-200 rounded-md px-5 ml-2 text-gray-800 fond-medium'>{d.price.toLocaleString('en-US')}</span>
-                      </div>
-                      <img className='h-[15em] mx-auto cursor-pointer' src={require(`../images${d.img}`)} />
-                    </div>
-                  )
-                }
-              </div>
-            </div>
-          </>
 
-      }
-
+      <div className='grid grid-cols-6 gap-x-2'>
+        <div className='col-span-4'>
+          <CartTable isStockOut={isStockOut} />
+        </div>
+        <div className='col-span-2 bg-white rounded px-5'>
+          <OrderSummary />
+        </div>
+      </div>
+      <div className='mt-2 text-center pt-3'>
+        <span className='text-xl text-gray-700'>You may also like</span>
+        <div className='grid grid-cols-4 gap-x-2 p-5 mt-3 bg-white rounded'>
+          {
+            mayLikeItem.map(d =>
+              <div key={d.id} className='bg-gray-100 rounded p-5'>
+                <div className='flex justify-between items-center mt-3 mb-5'>
+                  <p className='text-sm text-gray-700 truncate'>{d.desc}</p>
+                  <span className='bg-red-200 rounded-md px-5 ml-2 text-gray-800 fond-medium'>{d.price.toLocaleString('en-US')}</span>
+                </div>
+                <img className='h-[15em] mx-auto cursor-pointer' src={require(`../images${d.img}`)} />
+              </div>
+            )
+          }
+        </div>
+      </div>
     </div>
   )
 }

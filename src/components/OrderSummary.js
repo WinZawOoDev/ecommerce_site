@@ -9,7 +9,7 @@ export default function OrderSummary() {
     const totalOrderPrice = () => ordSummary.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0);
 
     return (
-        <>
+        <div className='bg-white rounded px-5 max-h-[45em] min-h-[40em]'>
             <div className='pt-8 pb-5'>
                 <span className=' text-gray-700'>Order Summary</span>
             </div>
@@ -52,6 +52,6 @@ export default function OrderSummary() {
             <div className='text-center my-20'>
                 <Link to={"/"} className='font-light text-sm text-cyan-700 underline'>continue shopping</Link>
             </div>
-        </>
+        </div>
     )
 }
