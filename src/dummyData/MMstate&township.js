@@ -1,5 +1,5 @@
 
-export const data = [
+export const MMRegions = [
     {
         "eng": "Magway Region",
         "mm": "မကွေးတိုင်းဒေသကြီး",
