@@ -246,7 +246,7 @@ function ListBox({ items, value, handleChange }) {
                             <span className='text-sm text-gray-500 capitalize'>{value.name}</span>
                             <span className={`ml-2 mr-1 text-gray-400 text-xs ${open ? 'rotate-180' : 'rotate-0'}`}><BsFillCaretDownFill /></span>
                         </Listbox.Button>
-                        <Listbox.Options className="absolute w-48 bg-white border border-gray-100 py-3 px-1 mt-1 max-h-80 overflow-y-auto rounded-b-sm shadow-md">
+                        <Listbox.Options className="absolute w-48 bg-white border border-gray-100 py-3 px-1 mt-1 max-h-80 overflow-y-auto rounded-b-sm shadow-md scrollbar-thin scrollbar-thumb-gray-300 scrollbar-thumb-rounded-md scrollbar-track-rounded-md">
                             {items.map((item) => (
                                 <Listbox.Option
                                     key={item.id}
