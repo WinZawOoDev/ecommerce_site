@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectProductFromCart } from '../app/cartSlice'
 
-export default function OrderSummary() {
+export default function OrderSummary({ checkout: { disable, to } }) {
 
     const { ordSummary } = useSelector(selectProductFromCart);
     const totalOrderPrice = () => ordSummary.reduce((accumulator, currentValue) => accumulator + currentValue.value, 0);
@@ -45,7 +45,7 @@ export default function OrderSummary() {
                 </div>
             </div>
             <div className='flex justify-center mt-10'>
-                <Link to={"deli-info"} className='w-80 py-2 text-center rounded bg-red-800 outline-none'>
+                <Link to={to} onClick={(e) => disable && e.preventDefault()} className={`w-80 py-2 text-center rounded outline-none transition duration-75 ease-in-out ${disable ? "bg-gray-200 cursor-default pointer-events-none" : "bg-red-800"}`}>
                     <span className='uppercase text-white'>proceed to checkout</span>
                 </Link>
             </div>

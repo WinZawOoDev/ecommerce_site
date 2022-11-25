@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { BsHouse, BsChevronExpand, BsCheck2 } from 'react-icons/bs'
-import { HiOutlineBuildingOffice } from 'react-icons/hi2'
+import { BsHouse, BsChevronExpand, BsCheck2, BsPencilSquare } from 'react-icons/bs'
+import { HiOutlineBuildingOffice, HiUser } from 'react-icons/hi2'
 import { Combobox, Transition } from '@headlessui/react'
 import { v4 as uuidv4 } from 'uuid'
 import { useFormik } from 'formik'
@@ -39,7 +39,7 @@ export default function DeliveryInfo() {
     }),
     onSubmit: values => {
       console.log({ ...values, region: values.region.eng, city: values.city.eng, township: values.township.eng })
-      form.resetForm();
+      setShowFormResult(true);
     }
   });
 
@@ -101,137 +101,187 @@ export default function DeliveryInfo() {
 
   const isValEmpt = (values) => values.length === 0 ? true : false;
 
+  function renderForm() {
+    return (
+      <>
+        <div className='grid grid-cols-2 gap-2 content-center max-h-[60em]'>
+          <div className='mx-5'>
+            <Input
+              id="fullName"
+              label="Full Name"
+              name="fullName"
+              type="text"
+              placeholder="Enter your first name and last name"
+              value={form.values.fullName}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+              error={(form.touched.fullName && form.errors.fullName) && form.errors.fullName}
+            />
+            <Input
+              id="phoneNumber"
+              label="Phone Number"
+              name="phoneNumber"
+              type="number"
+              placeholder="Please enter your phone number"
+              value={form.values.phoneNumber}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+              error={(form.touched.phoneNumber && form.errors.phoneNumber) && form.errors.phoneNumber}
+            />
+            <Input
+              id="building"
+              label="Building / House Number / Floor / Street"
+              name="building"
+              type="text"
+              placeholder="Please Enter"
+              value={form.values.building}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+              error={(form.touched.building && form.errors.building) && form.errors.building}
+            />
+            <Input
+              id="colony"
+              label="Colony / Suburb / Locality / Landmark"
+              name="colony"
+              type="text"
+              placeholder="Please Enter"
+              value={form.values.colony}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+              error={(form.touched.colony && form.errors.colony) && form.errors.colony}
+            />
+          </div>
+          <div className='mx-5'>
+            <SelectComboBox
+              label="State / Region"
+              name="region"
+              type="text"
+              placeholder="Please choose your region"
+              selectedValue={form.values.region}
+              onChange={(value) => handleComboChange({ formField: "region", value })}
+              onBlur={() => form.setFieldTouched("region", true)}
+              options={regionOptions}
+              error={(form.touched.region && form.errors.region) && form.errors.region}
+            />
+            <SelectComboBox
+              label="City"
+              name="city"
+              type="text"
+              placeholder="Please choose your city"
+              selectedValue={form.values.city}
+              onChange={(value) => handleComboChange({ formField: "city", value })}
+              onBlur={() => form.setFieldTouched("city", true)}
+              options={cityOptions}
+              disabled={isValEmpt(form.values.region)}
+              error={(form.touched.city && form.errors.city) && form.errors.city}
+            />
+            <SelectComboBox
+              label="Township"
+              name="township"
+              type="text"
+              placeholder="Please choose your township"
+              selectedValue={form.values.township}
+              onChange={(value) => handleComboChange({ formField: "township", value })}
+              onBlur={() => form.setFieldTouched("township", true)}
+              options={townshipOptions}
+              disabled={isValEmpt(form.values.city)}
+              error={(form.touched.township && form.errors.township) && form.errors.township}
+            />
+            <Input
+              id="address"
+              label="Address"
+              name="address"
+              type="text"
+              placeholder="Please enter your address"
+              value={form.values.address}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+              error={(form.touched.address && form.errors.address) && form.errors.address}
+            />
+          </div>
+        </div>
+        <div className='relative flex w-full items-center justify-between my-5'>
+          <div className='w-1/2'>
+            <div className='max-w-[25em] flex justify-end items-center mx-5'>
+              <button onClick={() => handleHouseOrOffice({ house: true, office: false })} className={`flex items-center justify-between border border-gray-200 px-4 py-2 rounded-md bg-gray-50 mx-5 ${houseOrOffice.house && " border-cyan-200 focus:border-cyan-400"}`}>
+                <BsHouse className='text-xl text-gray-700' />
+                <span className='ml-2 text-xs font-medium text-gray-700'>House</span>
+              </button>
+              <button onClick={() => handleHouseOrOffice({ office: true, house: false })} className={`flex items-center justify-between border border-gray-200 px-4 py-2 rounded-md bg-gray-50 ${houseOrOffice.office && " border-cyan-200 focus:border-cyan-400"}`}>
+                <HiOutlineBuildingOffice className='text-xl text-gray-700' ariaHidden={true} />
+                <span className='ml-2 text-xs font-medium text-gray-700'>office</span>
+              </button>
+            </div>
+          </div>
+          <div className='w-1/2'>
+            <div className='max-w-[25em] mx-5'>
+              <button type='submit' onClick={() => form.handleSubmit()} className='bg-cyan-600 w-full rounded-md py-2 outline-none'>
+                <span className='uppercase text-white text-sm font-medium'>save</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </>
+
+    )
+  }
+
+
+  function renderFormResult() {
+
+    const FormData = ({ label, value }) => (
+      <div className='flex items-center my-5'>
+        <div className='w-1/2 pr-3'>
+          <span className='block text-gray-500 text-sm font-light truncate'>{label}</span>
+        </div>
+        <div className='w-1/2 flex items-center'>
+          <span className='mr-5 text-gray-500'>:</span>
+          <span className='block text-gray-900 text-sm font-medium truncate'>{value}</span>
+        </div>
+      </div>
+    )
+
+    return (
+      <>
+        <div className='grid grid-cols-2 gap-2 content-center max-h-[60em] mx-5 my-5'>
+          <div className='relative'>
+            <FormData label="Fullname" value={form.values.fullName} />
+            <FormData label="PhoneNumber" value={form.values.phoneNumber} />
+            <FormData label="Building / House Number / Floor / Street" value={form.values.building} />
+            <FormData label="Colony / Suburb / Locality / Landmark" value={form.values.colony} />
+            <div className='flex items-center'>
+              {houseOrOffice.house ? <BsHouse className='mr-2 text-lg text-gray-500' /> : <HiOutlineBuildingOffice className='mr-2 text-xl text-gray-400' />}
+              <span className='text-sm text-gray-900'>{houseOrOffice.house ? "House" : "Office"}</span>
+            </div>
+          </div>
+          <div className='relative'>
+            <FormData label="Region" value={form.values.region.eng} />
+            <FormData label="City" value={form.values.city.eng} />
+            <FormData label="Township" value={form.values.township.eng} />
+            <FormData label="Address" value={form.values.address} />
+          </div>
+        </div>
+        <div className='flex justify-end items-center mx-10'>
+          <button onClick={() => setShowFormResult(false)} className='outline-none'>
+            <BsPencilSquare className='text-cyan-600 text-xl' />
+          </button>
+        </div>
+      </>
+    )
+  }
+
   return (
     <div className='container mx-auto'>
       <div className='grid grid-cols-6 gap-x-2'>
         <div className='col-span-4'>
           <div className='bg-white rounded py-7 px-5 mb-2'>
             <span className='text-lg text-gray-700'>Delivery Information</span>
-            <div className='grid grid-cols-2 gap-2 content-center max-h-[60em]'>
-              <div className='mx-5'>
-                <Input
-                  id="fullName"
-                  label="Full Name"
-                  name="fullName"
-                  type="text"
-                  placeholder="Enter your first name and last name"
-                  value={form.values.fullName}
-                  onChange={form.handleChange}
-                  onBlur={form.handleBlur}
-                  error={(form.touched.fullName && form.errors.fullName) && form.errors.fullName}
-                />
-                <Input
-                  id="phoneNumber"
-                  label="Phone Number"
-                  name="phoneNumber"
-                  type="number"
-                  placeholder="Please enter your phone number"
-                  value={form.values.phoneNumber}
-                  onChange={form.handleChange}
-                  onBlur={form.handleBlur}
-                  error={(form.touched.phoneNumber && form.errors.phoneNumber) && form.errors.phoneNumber}
-                />
-                <Input
-                  id="building"
-                  label="Building / House Number / Floor / Street"
-                  name="building"
-                  type="text"
-                  placeholder="Please Enter"
-                  value={form.values.building}
-                  onChange={form.handleChange}
-                  onBlur={form.handleBlur}
-                  error={(form.touched.building && form.errors.building) && form.errors.building}
-                />
-                <Input
-                  id="colony"
-                  label="Colony / Suburb / Locality / Landmark"
-                  name="colony"
-                  type="text"
-                  placeholder="Please Enter"
-                  value={form.values.colony}
-                  onChange={form.handleChange}
-                  onBlur={form.handleBlur}
-                  error={(form.touched.colony && form.errors.colony) && form.errors.colony}
-                />
-              </div>
-              <div className='mx-5'>
-                <SelectComboBox
-                  label="State / Region"
-                  name="region"
-                  type="text"
-                  placeholder="Please choose your region"
-                  selectedValue={form.values.region}
-                  onChange={(value) => handleComboChange({ formField: "region", value })}
-                  onBlur={() => form.setFieldTouched("region", true)}
-                  options={regionOptions}
-                  error={(form.touched.region && form.errors.region) && form.errors.region}
-                />
-                <SelectComboBox
-                  label="City"
-                  name="city"
-                  type="text"
-                  placeholder="Please choose your city"
-                  selectedValue={form.values.city}
-                  onChange={(value) => handleComboChange({ formField: "city", value })}
-                  onBlur={() => form.setFieldTouched("city", true)}
-                  options={cityOptions}
-                  disabled={isValEmpt(form.values.region)}
-                  error={(form.touched.city && form.errors.city) && form.errors.city}
-                />
-                <SelectComboBox
-                  label="Township"
-                  name="township"
-                  type="text"
-                  placeholder="Please choose your township"
-                  selectedValue={form.values.township}
-                  onChange={(value) => handleComboChange({ formField: "township", value })}
-                  onBlur={() => form.setFieldTouched("township", true)}
-                  options={townshipOptions}
-                  disabled={isValEmpt(form.values.city)}
-                  error={(form.touched.township && form.errors.township) && form.errors.township}
-                />
-                <Input
-                  id="address"
-                  label="Address"
-                  name="address"
-                  type="text"
-                  placeholder="Please enter your address"
-                  value={form.values.address}
-                  onChange={form.handleChange}
-                  onBlur={form.handleBlur}
-                  error={(form.touched.address && form.errors.address) && form.errors.address}
-                />
-              </div>
-
-
-            </div>
-            <div className='relative flex w-full items-center justify-between my-5'>
-              <div className='w-1/2'>
-                <div className='max-w-[25em] flex justify-end items-center mx-5'>
-                  <button onClick={() => handleHouseOrOffice({ house: true, office: false })} className={`flex items-center justify-between border border-gray-200 px-4 py-2 rounded-md bg-gray-50 mx-5 ${houseOrOffice.house && " border-cyan-200 focus:border-cyan-400"}`}>
-                    <BsHouse className='text-xl text-gray-700' />
-                    <span className='ml-2 text-xs font-medium text-gray-700'>House</span>
-                  </button>
-                  <button onClick={() => handleHouseOrOffice({ office: true, house: false })} className={`flex items-center justify-between border border-gray-200 px-4 py-2 rounded-md bg-gray-50 ${houseOrOffice.office && " border-cyan-200 focus:border-cyan-400"}`}>
-                    <HiOutlineBuildingOffice className='text-xl text-gray-700' ariaHidden={true} />
-                    <span className='ml-2 text-xs font-medium text-gray-700'>office</span>
-                  </button>
-                </div>
-              </div>
-              <div className='w-1/2'>
-                <div className='max-w-[25em] mx-5'>
-                  <button type='submit' onClick={() => form.handleSubmit()} className='bg-cyan-600 w-full rounded-md py-2 outline-none'>
-                    <span className='uppercase text-white text-sm font-medium'>save</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
+            {showFormResult ? renderFormResult() : renderForm()}
           </div>
           <CartTable increOrDecreQty={false} />
         </div>
         <div className='col-span-2'>
-          <OrderSummary />
+          <OrderSummary checkout={{ disable: showFormResult ? false : true, to: "payment" }} />
         </div>
       </div>
     </div>

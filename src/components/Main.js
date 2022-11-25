@@ -8,6 +8,8 @@ import ProductDetails from './ProductDetails'
 import CartView from './CartView'
 import DeliveryInfo from './DeliveryInfo'
 import EmptyCart from './EmptyCart'
+import PageNotFound from './PageNotFound'
+import Payment from './Payment'
 
 export default function Main() {
 
@@ -34,10 +36,12 @@ export default function Main() {
                     <Route path='deli-info' element={<><Outlet /></>}>
                         <Route index element={<DeliveryInfo />} />
                         <Route path='empty-cart' element={<EmptyCart />} />
+                        <Route path='payment' element={<Payment/>}/>
                     </Route>
                     <Route path='empty-cart' element={<EmptyCart />} />
                 </Route>
                 <Route path='empty-cart' element={<EmptyCart />} />
+                <Route path='*' element={<PageNotFound/>}/>
             </Routes>
             <Footer />
         </div>

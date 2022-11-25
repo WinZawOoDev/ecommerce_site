@@ -43,7 +43,7 @@ export default function CartView() {
           <CartTable isStockOut={isStockOut} />
         </div>
         <div className='col-span-2 bg-white rounded px-5'>
-          <OrderSummary />
+          <OrderSummary checkout={{diable: false, to:"deli-info"}} />
         </div>
       </div>
       <div className='mt-2 text-center pt-3'>
