@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { BsHouse, BsChevronExpand, BsCheck2, BsPencilSquare } from 'react-icons/bs'
@@ -9,13 +9,17 @@ import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { useImmer } from 'use-immer'
 
-import { selectIsCartEmpty } from '../app/cartSlice'
+import { selectIsCartEmpty } from '../../app/cartSlice'
 import OrderSummary from './OrderSummary'
 import CartTable from './CartTable'
-import { MMRegions } from '../dummyData/MMstate&township'
+import { MMRegions } from '../../dummyData/MMstate&township'
+import Stepper from './Stepper'
+import { CartViewContext } from './index'
 
 
 export default function DeliveryInfo() {
+
+  const { changeStepperState, stepNames } = useContext(CartViewContext)
 
   const isCartEmpty = useSelector(selectIsCartEmpty);
   const navigate = useNavigate();
@@ -37,11 +41,17 @@ export default function DeliveryInfo() {
       township: Yup.object({ eng: Yup.string().required('township is a required field') }),
       address: Yup.string().required()
     }),
-    onSubmit: values => {
-      console.log({ ...values, region: values.region.eng, city: values.city.eng, township: values.township.eng })
-      setShowFormResult(true);
-    }
+    onSubmit: handleFormSubmit
   });
+
+
+  function handleFormSubmit(values) {
+    console.log({ ...values, region: values.region.eng, city: values.city.eng, township: values.township.eng })
+    setShowFormResult(true);
+    changeStepperState({ name: stepNames.deli, isFinished: true });
+  }
+
+
 
   const [regionOptions, setRegionOptions] = useImmer([]);
   const [cityOptions, setCityOptions] = useImmer([]);
@@ -272,6 +282,11 @@ export default function DeliveryInfo() {
 
   return (
     <div className='container mx-auto'>
+      <div className='bg-white rounded my-2'>
+        <div className='h-24 pt-3'>
+          <Stepper />
+        </div>
+      </div>
       <div className='grid grid-cols-6 gap-x-2'>
         <div className='col-span-4'>
           <div className='bg-white rounded py-7 px-5 mb-2'>

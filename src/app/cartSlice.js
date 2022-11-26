@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { AiFillExperiment } from 'react-icons/ai';
 import { products } from '../dummyData/Products';
 
 const cartSlice = createSlice({

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { selectProductFromCart, selectTotalCart, selectTotalCartQty, increCartQty, decreCartQty, deleteCart } from '../app/cartSlice'
+import { selectProductFromCart, selectTotalCart, selectTotalCartQty, increCartQty, decreCartQty, deleteCart } from '../../app/cartSlice'
 import { BsX, BsDash, BsPlus } from 'react-icons/bs'
 
 export default function CartTable({ isStockOut, increOrDecreQty }) {
@@ -37,7 +37,7 @@ export default function CartTable({ isStockOut, increOrDecreQty }) {
                             items.map((data, index) => (
                                 <tr key={index + 1}>
                                     <td className='font-light text-gray-600 inline-flex items-center py-4'>
-                                        <img className="object-contain max-w-[5em]" src={require(`../images${data.productDetail.img}`)} />
+                                        <img className="object-contain max-w-[5em]" src={require(`../../images${data.productDetail.img}`)} />
                                         <div className='ml-2 max-w-[15em]'>
                                             <span className='block text-sm font-light truncate text-gray-800'>{data.productDetail.desc}</span>
                                             <div>

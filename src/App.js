@@ -8,7 +8,6 @@ function App() {
   const [UIView, setUIView] = useState({ grid: true, list: false });
   const changeUIView = ({ grid, list }) => setUIView(prev => ({ ...prev, grid, list }));
 
-
   const appProvider = { UIView, changeUIView }
 
   return (

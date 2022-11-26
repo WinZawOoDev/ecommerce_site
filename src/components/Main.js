@@ -5,11 +5,10 @@ import Body from './Body'
 import Footer from './Footer'
 import OneCategory from './OneCategory'
 import ProductDetails from './ProductDetails'
-import CartView from './CartView'
-import DeliveryInfo from './DeliveryInfo'
-import EmptyCart from './EmptyCart'
+import EmptyCart from './Cart/EmptyCart'
 import PageNotFound from './PageNotFound'
-import Payment from './Payment'
+import Cart from './Cart'
+
 
 export default function Main() {
 
@@ -31,17 +30,9 @@ export default function Main() {
                     <Route path='product-details/:mainCategory/:subCategory/:product/:producId' element={<ProductDetails />} />
                 </Route>
                 <Route path='product-details/:mainCategory/:subCategory/:product/:producId' element={<ProductDetails />} />
-                <Route path='view-cart' element={<><Outlet /></>}>
-                    <Route index element={<CartView />} />
-                    <Route path='deli-info' element={<><Outlet /></>}>
-                        <Route index element={<DeliveryInfo />} />
-                        <Route path='empty-cart' element={<EmptyCart />} />
-                        <Route path='payment' element={<Payment/>}/>
-                    </Route>
-                    <Route path='empty-cart' element={<EmptyCart />} />
-                </Route>
+                <Route path='view-cart/*' element={<Cart />} />
                 <Route path='empty-cart' element={<EmptyCart />} />
-                <Route path='*' element={<PageNotFound/>}/>
+                <Route path='*' element={<PageNotFound />} />
             </Routes>
             <Footer />
         </div>

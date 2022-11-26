@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { selectProductFromCart } from '../app/cartSlice'
+import { selectProductFromCart } from '../../app/cartSlice'
 
 export default function OrderSummary({ checkout: { disable, to } }) {
 

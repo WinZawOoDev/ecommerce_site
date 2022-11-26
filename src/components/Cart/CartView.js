@@ -2,7 +2,7 @@ import React from 'react'
 import { useImmer } from 'use-immer';
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { selectProductFromCart, selectIsCartEmpty } from '../app/cartSlice'
+import { selectProductFromCart, selectIsCartEmpty } from '../../app/cartSlice'
 import CartTable from './CartTable';
 import OrderSummary from './OrderSummary';
 
@@ -43,7 +43,7 @@ export default function CartView() {
           <CartTable isStockOut={isStockOut} />
         </div>
         <div className='col-span-2 bg-white rounded px-5'>
-          <OrderSummary checkout={{diable: false, to:"deli-info"}} />
+          <OrderSummary checkout={{ diable: false, to: "deli-info" }} />
         </div>
       </div>
       <div className='mt-2 text-center pt-3'>
@@ -56,7 +56,7 @@ export default function CartView() {
                   <p className='text-sm text-gray-700 truncate'>{d.desc}</p>
                   <span className='bg-red-200 rounded-md px-5 ml-2 text-gray-800 fond-medium'>{d.price.toLocaleString('en-US')}</span>
                 </div>
-                <img className='h-[15em] mx-auto cursor-pointer' src={require(`../images${d.img}`)} />
+                <img className='h-[15em] mx-auto cursor-pointer' src={require(`../../images${d.img}`)} />
               </div>
             )
           }

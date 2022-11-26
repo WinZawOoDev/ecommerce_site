@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { Listbox } from '@headlessui/react'
-import { BsCreditCard, BsPaypal, BsFillCheckCircleFill, BsCashCoin, BsChevronDown } from 'react-icons/bs'
+import { BsCreditCard, BsPaypal, BsFillCheckCircleFill, BsCashCoin, BsChevronDown, BsCheckCircle, BsCheck } from 'react-icons/bs'
 import { FaCcVisa, FaCcMastercard, FaCcJcb, FaGooglePay } from 'react-icons/fa'
 import { useImmer } from 'use-immer';
+import Stepper from './Stepper'
+import { CartViewContext } from './index'
 
 const PAY_PARTNERS = {
     visa: {
@@ -39,7 +41,10 @@ const months = Array.from({ length: 12 }, (item, i) => new Date(0, i).toLocaleSt
 
 const years = ["2022", "2023", "2024", "2025", "2026", "2027"]
 
+
 export default function Payment() {
+
+    const { changeStepperState, stepNames } = useContext(CartViewContext);
 
     const [paymentMethods, setPaymentMethods] = useImmer({
         [PAY_PARTNERS.visa.name]: false,
@@ -62,6 +67,7 @@ export default function Payment() {
 
     const [month, setMonth] = useState("");
     const [year, setYear] = useState("");
+
 
     function renderButtons() {
 
@@ -102,6 +108,10 @@ export default function Payment() {
             </div>
         )
     }
+
+    useEffect(() => {
+        changeStepperState({ name: stepNames.payment, isFinished: true })
+    }, [])
 
     function renderIcons() {
         let name;
@@ -162,8 +172,13 @@ export default function Payment() {
     )
 
     return (
-        <div className='container mx-auto bg-white rounded'>
-            <div className='p-5'>
+        <div className='container mx-auto'>
+            <div className='bg-white rounded-t'>
+                <div className='h-20 pt-3'>
+                    <Stepper />
+                </div>
+            </div>
+            <div className='p-5 bg-white round'>
                 <span className='text-xl text-gray-700 font-medium'>Payment</span>
                 <div className='p-5'>
                     <span className='font-light text-gray-700'>Choose payment methods</span>
