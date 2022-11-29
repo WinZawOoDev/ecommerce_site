@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Form, useNavigate } from 'react-router-dom'
 import { BsHouse, BsChevronExpand, BsCheck2, BsPencilSquare } from 'react-icons/bs'
 import { HiOutlineBuildingOffice, HiUser } from 'react-icons/hi2'
 import { Combobox, Transition } from '@headlessui/react'
@@ -19,7 +19,7 @@ import { CartViewContext } from './index'
 
 export default function DeliveryInfo() {
 
-  const { changeStepperState, stepNames } = useContext(CartViewContext)
+  const { deliInfo, setDeliInfo, changeStepperState, stepNames } = useContext(CartViewContext)
 
   const isCartEmpty = useSelector(selectIsCartEmpty);
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ export default function DeliveryInfo() {
   const [showFormResult, setShowFormResult] = useState(false);
 
   const form = useFormik({
-    initialValues: { fullName: "", phoneNumber: "", building: "", colony: "", region: "", city: "", township: "", address: "" },
+    initialValues: deliInfo,
     validationSchema: Yup.object().shape({
       fullName: Yup.string().min(4).max(20).required(),
       phoneNumber: Yup.string().min(10).max(10).required(),
@@ -47,6 +47,17 @@ export default function DeliveryInfo() {
 
   function handleFormSubmit(values) {
     console.log({ ...values, region: values.region.eng, city: values.city.eng, township: values.township.eng })
+    setDeliInfo(prev => {
+      prev.fullName = values.fullName;
+      prev.phoneNumber = values.phoneNumber;
+      prev.building = values.building;
+      prev.colony = values.colony;
+      prev.region = values.region.eng;
+      prev.city = values.city.eng;
+      prev.township = values.township.eng;
+      prev.address = values.address;
+      prev.houseOrOffice = houseOrOffice;
+    })
     setShowFormResult(true);
     changeStepperState({ name: stepNames.deli, isFinished: true });
   }
@@ -66,7 +77,6 @@ export default function DeliveryInfo() {
     if (isCartEmpty) navigate("empty-cart");
     getRegions();
   }, [])
-
 
   const handleComboChange = ({ formField, value }) => {
 
@@ -239,6 +249,21 @@ export default function DeliveryInfo() {
 
   function renderFormResult() {
 
+    const datas = [
+      [
+        { id: 1, label: "Fullname", value: deliInfo.fullName },
+        { id: 2, label: "PhoneNumber", value: deliInfo.phoneNumber },
+        { id: 3, label: "Building / House Number / Floor / Street", value: deliInfo.building },
+        { id: 4, label: "Colony / Suburb / Locality / Landmark", value: deliInfo.colony }
+      ],
+      [
+        { id: 5, label: "Region", value: deliInfo.region },
+        { id: 6, label: "City", value: deliInfo.city },
+        { id: 7, label: "Township", value: deliInfo.township },
+        { id: 8, label: "Address", value: deliInfo.address }
+      ]
+    ]
+
     const FormData = ({ label, value }) => (
       <div className='flex items-center my-5'>
         <div className='w-1/2 pr-3'>
@@ -255,20 +280,14 @@ export default function DeliveryInfo() {
       <>
         <div className='grid grid-cols-2 gap-2 content-center max-h-[60em] mx-5 my-5'>
           <div className='relative'>
-            <FormData label="Fullname" value={form.values.fullName} />
-            <FormData label="PhoneNumber" value={form.values.phoneNumber} />
-            <FormData label="Building / House Number / Floor / Street" value={form.values.building} />
-            <FormData label="Colony / Suburb / Locality / Landmark" value={form.values.colony} />
+            {datas[0].map(data => <FormData key={data.id} label={data.label} value={data.value} />)}
             <div className='flex items-center'>
               {houseOrOffice.house ? <BsHouse className='mr-2 text-lg text-gray-500' /> : <HiOutlineBuildingOffice className='mr-2 text-xl text-gray-400' />}
               <span className='text-sm text-gray-900'>{houseOrOffice.house ? "House" : "Office"}</span>
             </div>
           </div>
           <div className='relative'>
-            <FormData label="Region" value={form.values.region.eng} />
-            <FormData label="City" value={form.values.city.eng} />
-            <FormData label="Township" value={form.values.township.eng} />
-            <FormData label="Address" value={form.values.address} />
+            {datas[1].map(data => <FormData key={data.id} label={data.label} value={data.value} />)}
           </div>
         </div>
         <div className='flex justify-end items-center mx-10'>
@@ -282,13 +301,11 @@ export default function DeliveryInfo() {
 
   return (
     <div className='container mx-auto'>
-      <div className='bg-white rounded my-2'>
-        <div className='h-24 pt-3'>
-          <Stepper />
-        </div>
-      </div>
       <div className='grid grid-cols-6 gap-x-2'>
         <div className='col-span-4'>
+          <div className='h-24 pt-3 bg-whit rounded-t'>
+            <Stepper />
+          </div>
           <div className='bg-white rounded py-7 px-5 mb-2'>
             <span className='text-lg text-gray-700'>Delivery Information</span>
             {showFormResult ? renderFormResult() : renderForm()}

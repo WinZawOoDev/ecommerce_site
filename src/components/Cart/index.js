@@ -5,12 +5,15 @@ import CartView from './CartView'
 import DeliveryInfo from './DeliveryInfo'
 import EmptyCart from './EmptyCart'
 import Payment from './Payment'
+import PaymentConfirm from './PaymentConfirm'
 
 export const CartViewContext = createContext({});
 
 const STEP_NAMES = { deli: "Delivery Info", payment: "Payment", confirm: "Confirmed", finish: "Finished" };
 
 export default function Cart() {
+
+    const [deliInfo, setDeliInfo] = useImmer({ fullName: "", phoneNumber: "", building: "", colony: "", region: "", city: "", township: "", address: "" });
 
     const [stepperState, setStepperState] = useImmer([
         { id: 1, name: STEP_NAMES.deli, isFinished: false },
@@ -25,14 +28,17 @@ export default function Cart() {
     })
 
     return (
-        <CartViewContext.Provider value={{ stepNames: STEP_NAMES, steps: stepperState, changeStepperState }}>
+        <CartViewContext.Provider value={{ deliInfo, setDeliInfo, stepNames: STEP_NAMES, steps: stepperState, changeStepperState }}>
             <Routes>
                 <Route element={<><Outlet /></>}>
                     <Route index element={<CartView />} />
                     <Route path='deli-info' element={<><Outlet /></>}>
                         <Route index element={<DeliveryInfo />} />
                         <Route path='empty-cart' element={<EmptyCart />} />
-                        <Route path='payment' element={<Payment />} />
+                        <Route path='payment' element={<><Outlet /></>}>
+                            <Route index element={<Payment />} />
+                            <Route path='confirm' element={<PaymentConfirm />} />
+                        </Route>
                     </Route>
                     <Route path='empty-cart' element={<EmptyCart />} />
                 </Route>
