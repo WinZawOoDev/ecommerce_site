@@ -7,14 +7,17 @@ export function Input({ label, type, placeholder, name, value, onBlur, onChange,
 
     const isPassType = (type) => type === "password";
     const [passInput, setPassInput] = useState({ eye: true, type: isPassType(type) ? type : "" });
-    const handleShowPassword = () => setPassInput(prev => ({ ...prev, eye: !prev.eye, type: isPassType(prev.type) ? "text" : "password" }));
+    const handleShowPassword = (e) => {
+        e.preventDefault()
+        setPassInput(prev => ({ ...prev, eye: !prev.eye, type: isPassType(prev.type) ? "text" : "password" }))
+    };
 
 
     return (
         <div className='relative my-6 mt-1'>
             <label className='block my-2 text-xs font-medium text-gray-700' htmlFor={name}>{label}</label>
             <input type={isPassType(type) ? passInput["type"] : type} name={name} placeholder={placeholder} value={value} onBlur={onBlur} onChange={onChange} className="border border-gray-200 rounded p-2 w-full placeholder:font-light placeholder:text-sm outline-none" />
-            {(isPassType(type) || (passInput["type"] === "text")) && <button onClick={() => handleShowPassword()} className='absolute inset-y-9 my-auto right-3 outline-none text-gray-600'>{passInput["eye"] ? <BsEyeFill className='text-lg' /> : <BsEyeSlashFill className='text-lg' />}</button>}
+            {(isPassType(type) || (passInput["type"] === "text")) && <button onClick={e => handleShowPassword(e)} className='absolute inset-y-9 my-auto right-3 outline-none text-gray-600'>{passInput["eye"] ? <BsEyeFill className='text-lg' /> : <BsEyeSlashFill className='text-lg' />}</button>}
             <span className={`absolute left-0 -bottom-5 text-red-600 text-xs opacity-0 transition duration-100 ease-in-out ${error && " opacity-100"}`}>{error}</span>
             {(isPassType(type) && forgotPassword) && <button className='absolute -bottom-6 right-1 text-xs text-cyan-600 outline-none underline tracking-wide font-light'>forgot password</button>}
         </div>

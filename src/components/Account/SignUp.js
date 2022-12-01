@@ -10,7 +10,6 @@ export default function SignUp() {
 
     const { showSignUp, closeSignUp } = useContext(AppContext);
 
-
     const form = useFormik({
         initialValues: { phoneNumberOrEmail: "", password: "" },
         validationSchema: Yup.object().shape({
@@ -18,11 +17,10 @@ export default function SignUp() {
                 return phone && phone.toString().length >= 10 && phone.toString().length <= 14 ? true : false;
             }).isValidSync(value)),
             password: Yup.string().min(6).max(8).required('Password is required'),
-            confirmPassword: Yup.string().min(6).max(8).required('Confirm Password is required')
+            confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Password must match!').required('Confirm Password is required')
         }),
         onSubmit: handleSubmit
     });
-
 
     function handleSubmit(values) {
         console.log(values);
