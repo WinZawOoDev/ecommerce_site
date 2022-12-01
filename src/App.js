@@ -8,7 +8,17 @@ function App() {
   const [UIView, setUIView] = useState({ grid: true, list: false });
   const changeUIView = ({ grid, list }) => setUIView(prev => ({ ...prev, grid, list }));
 
-  const appProvider = { UIView, changeUIView }
+  const [showSignUp, setShowSignUp] = useState(false);
+  const closeSignUp = () => setShowSignUp(false);
+  const openSignUp = () => setShowSignUp(true);
+
+  const [showSignIn, setShowSignIn] = useState(true);
+  const closeSignIn = () => setShowSignIn(false);
+  const openSignIn = () => setShowSignIn(true);
+
+
+
+  const appProvider = { UIView, changeUIView, showSignUp, openSignUp, closeSignUp, showSignIn, closeSignIn, openSignIn }
 
   return (
     <AppContext.Provider value={appProvider}>

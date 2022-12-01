@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Routes, Route, Outlet } from 'react-router-dom'
 import Header from './Header'
 import Body from './Body'
@@ -9,16 +9,12 @@ import EmptyCart from './Cart/EmptyCart'
 import PageNotFound from './PageNotFound'
 import Cart from './Cart'
 import SignIn from './Account/SignIn'
+import SignUp from './Account/SignUp'
 
 
 export default function Main() {
 
-    // useEffect(() => {
 
-    //     fetch('https://api.storerestapi.com/categories')
-    //         .then(response => response.json())
-    //         .then(json => console.log(json));
-    // }, []);
 
 
     return (
@@ -33,9 +29,10 @@ export default function Main() {
                 <Route path='product-details/:mainCategory/:subCategory/:product/:producId' element={<ProductDetails />} />
                 <Route path='view-cart/*' element={<Cart />} />
                 <Route path='empty-cart' element={<EmptyCart />} />
-                <Route path='signin' element={<SignIn />} />
                 <Route path='*' element={<PageNotFound />} />
             </Routes>
+            <SignUp />
+            <SignIn/>
             <Footer />
         </div>
     )

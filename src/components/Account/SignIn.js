@@ -1,10 +1,15 @@
 import { useFormik } from 'formik'
-import React from 'react'
+import React, { useContext } from 'react'
 import * as Yup from 'yup'
+import { AppContext } from '../../App'
+import Modal from './Modal'
+
 import { Button, Input, WithSocial } from './Utilities'
 
 
 export default function Login() {
+
+  const { showSignIn, closeSignIn } = useContext(AppContext);
 
   const form = useFormik({
     initialValues: { phoneNumberOrEmail: "", password: "" },
@@ -14,15 +19,20 @@ export default function Login() {
       }).isValidSync(value)),
       password: Yup.string().min(6).max(8).required('Password is required'),
     }),
-    onSubmit: values => console.log(values)
+    onSubmit: handleSubmit
   });
 
+  function handleSubmit(values) {
+    console.log(values);
+    closeSignIn()
+  }
+
   return (
-    <div className='container mx-auto'>
-      <div className='bg-white rounded flex justify-center items-center p-10'>
-        <div className='w-1/2 p-2'>
+    <Modal isOpen={showSignIn} closeModal={closeSignIn}>
+      <div className='relative flex justify-center items-center'>
+        <div className='w-full p-5'>
           <span className='block py-3 text-xl font-light text-gray-900'>Please login !</span>
-          <div className='max-w-[27em]'>
+          <form>
             <Input
               label="Phone number or email"
               name="phoneNumberOrEmail"
@@ -42,13 +52,14 @@ export default function Login() {
               onBlur={form.handleBlur}
               onChange={form.handleChange}
               error={(form.touched.password && form.errors.password) && form.errors.password}
+              forgotPassword={true}
             />
             <Button title="SignIn" onClick={form.handleSubmit} />
             <WithSocial title={"login with"} />
-          </div>
+          </form>
         </div>
       </div>
-    </div>
+    </Modal>
   )
 }
 
