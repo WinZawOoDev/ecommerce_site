@@ -47,7 +47,7 @@ export default function Header() {
     const languange = [{ id: 1, name: "English", Label: EngFlagIcon }, { id: 2, name: "Myanmar", Label: MMFlagIcon }];
     const [selectedLanguage, setSelectedLanguage] = useState(languange[0]);
 
-    const accountInfo = { button: { name: "Account", Label: UserIcon }, items: [{ id: 1, name: "SignIn", Label: SingInIcon }, { id: 2, name: "SignOut", Label: SignOutIcon }] }
+    const accountInfo = { button: { name: "Account", Label: UserIcon }, items: [{ id: 1, name: "SignIn", Label: SingInIcon, }, { id: 2, name: "SignOut", Label: SignOutIcon }] }
 
     const [searchForm, setSearchForm] = useState({ product: "", category: category_data[0], showResult: false });
     const closeSearchResult = () => setSearchForm(prev => ({ ...prev, showResult: prev.showResult && false }));
