@@ -1,0 +1,28 @@
+POST http://localhost:8000/v1/auth/register HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "user@gmail.com",
+    "name" : "User",
+    "password": "rand0mpassword"
+}
+
+
+###
+
+POST http://localhost:8000/v1/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "user@gmail.com",
+    "password": "rand0mpassword"
+}
+
+###
+
+POST http://localhost:8000/v1/auth/logout HTTP/1.1
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MzhjOGFlOTQxZjJhNjNmMGUwZmY0YTQiLCJpYXQiOjE2NzAxNjg0NzIsImV4cCI6MTY3Mjc2MDQ3MiwidHlwZSI6InJlZnJlc2gifQ.DrqAC73N9u14jd0ol8sVQcBRbbR0xaNLpy-yPIhTB7A"
+}

@@ -1,0 +1,47 @@
+@hostname = localhost
+@port = 8000
+
+@baseUrl = http://{{hostname}}:{{port}}/
+
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MzhjOGFlOTQxZjJhNjNmMGUwZmY0YTQiLCJpYXQiOjE2NzAxNzE0NDEsImV4cCI6MTY3MDE3MzI0MSwidHlwZSI6ImFjY2VzcyJ9.lzu4jQ9QQS-Hres3yvt-41wQupNTMW6snPz2f_0T_i4
+
+
+
+GET  {{baseUrl}}v1/users HTTP/1.1
+Authorization: {{token}}
+
+###
+
+POST {{baseUrl}}v1/users HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "name" : "John Doe",
+    "email": "johndoe@mail.com",
+    "password": "j0hnd0epass",
+    "role": "user"
+}
+
+###
+GET  {{baseUrl}}v1/users/638c8ae941f2a63f0e0ff4a4 HTTP/1.1
+Authorization: {{token}}
+
+###
+
+PATCH  {{baseUrl}}v1/users/638c8ae941f2a63f0e0ff4a4 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "name" : "Updated John Doe",
+    "email" : "johndoe@mail.com",
+    "password": "johnd0epass"
+}
+
+###
+DELETE  {{baseUrl}}v1/users/638ccd361be82faad28c8da8 HTTP/1.1
+Authorization: {{token}}
+
+
+
