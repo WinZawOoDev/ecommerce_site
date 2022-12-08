@@ -1,4 +1,11 @@
-POST http://localhost:8000/v1/auth/register HTTP/1.1
+@hostname = localhost
+@port = 8000
+
+@baseUrl = http://{{hostname}}:{{port}}/
+
+
+### Register
+POST {{baseUrl}}v1/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
@@ -8,9 +15,8 @@ Content-Type: application/json
 }
 
 
-###
-
-POST http://localhost:8000/v1/auth/login HTTP/1.1
+### Login
+POST {{baseUrl}}v1/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
@@ -18,11 +24,36 @@ Content-Type: application/json
     "password": "rand0mpassword"
 }
 
-###
-
-POST http://localhost:8000/v1/auth/logout HTTP/1.1
+### Logout
+POST {{baseUrl}}v1/auth/logout HTTP/1.1
 Content-Type: application/json
 
 {
     "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MzhjOGFlOTQxZjJhNjNmMGUwZmY0YTQiLCJpYXQiOjE2NzAxNjg0NzIsImV4cCI6MTY3Mjc2MDQ3MiwidHlwZSI6InJlZnJlc2gifQ.DrqAC73N9u14jd0ol8sVQcBRbbR0xaNLpy-yPIhTB7A"
 }
+
+### Refresh Token
+POST {{baseUrl}}v1/auth/refresh-tokens HTTP/1.1
+Content-Type: application/json
+
+{
+     "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MzhjOGFlOTQxZjJhNjNmMGUwZmY0YTQiLCJpYXQiOjE2NzAxNzQzNTgsImV4cCI6MTY3Mjc2NjM1OCwidHlwZSI6InJlZnJlc2gifQ.kZYBOyzf1yaKoJMPIN1irkSqVnNXoeZSnW9RVcJD5ko"
+}
+
+### Forgot Password
+POST {{baseUrl}}v1/auth/forgot-password HTTP/1.1
+Content-Type: application/json
+
+{
+    "email": "user@gmail.com"
+}
+
+### Reset Password
+POST {{baseUrl}}v1/auth/reset-password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MzhjOGFlOTQxZjJhNjNmMGUwZmY0YTQiLCJpYXQiOjE2NzAxNzQ3NDIsImV4cCI6MTY3MDE3NjU0MiwidHlwZSI6ImFjY2VzcyJ9.W_RIpz3egrwwcyV7JJI1g1jKQcHkhpLzjGzvo1A4EZ4 HTTP/1.1
+Content-Type: application/json
+
+{
+    "password": "newPassword"
+}
+
+###

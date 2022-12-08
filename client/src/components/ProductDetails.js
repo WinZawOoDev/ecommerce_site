@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useImmer } from 'use-immer'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToCart } from '../app/cartSlice'
 import { addToWishList, selectCheckWhishList } from '../app/wishListSlice'
+import { fetchItemById } from '../app/itemSlice'
 import {
     BsChevronRight,
     BsStar,
@@ -20,23 +21,23 @@ import {
 } from 'react-icons/bs'
 import { AiOutlineFieldTime } from 'react-icons/ai'
 import { HiOutlineChatBubbleLeftRight } from 'react-icons/hi2'
-import { products } from '../dummyData/Products';
+import PulseLoader from './PulseLoader'
+
+const similarItem = [
+    { id: 1, img: "/items/similar/itm_1.png", dsc: "Logitech G203 LIGHTSYNC Wired Gaming Mouse - Black" },
+    { id: 2, img: "/items/similar/itm_2.png", dsc: "Lightweight and portable—with smooth scrolling, sculpted comfortable design and dongle" },
+    { id: 3, img: "/items/similar/itm_3.png", dsc: "Alienware Tri-Mode Wireless Gaming Mouse - AW720M" },
+    { id: 4, img: "/items/similar/itm_4.png", dsc: "Logitech M190 Full-Size Wireless Mouse" }
+];
 
 export default function ProductDetails() {
 
     const urlParams = useParams();
     const dispatch = useDispatch();
 
-    const checkWishList = useSelector(state => selectCheckWhishList(state, { id: 1, name: "logiTech G502 mouse" }));
+    const [product, setProduct] = useImmer();
 
-    const [product, setProduct] = useImmer(products[0]);
-
-    const [similarItem, setSimilarItem] = useState([
-        { id: 1, img: "/items/similar/itm_1.png", dsc: "Logitech G203 LIGHTSYNC Wired Gaming Mouse - Black" },
-        { id: 2, img: "/items/similar/itm_2.png", dsc: "Lightweight and portable—with smooth scrolling, sculpted comfortable design and dongle" },
-        { id: 3, img: "/items/similar/itm_3.png", dsc: "Alienware Tri-Mode Wireless Gaming Mouse - AW720M" },
-        { id: 4, img: "/items/similar/itm_4.png", dsc: "Logitech M190 Full-Size Wireless Mouse" }
-    ]);
+    const checkWishList = useSelector(state => selectCheckWhishList(state, { id: product?.id, name: product?.name }));
 
     const handleChangeImage = (currentImage) => setProduct(prev => {
         const prevView = prev.images.findIndex(img => img.view === true);
@@ -45,8 +46,7 @@ export default function ProductDetails() {
         if (index !== -1) prev.images[index].view = true;
     });
 
-
-    const [qty, setQty] = useImmer({ current: 0, avaiable: product.total });
+    const [qty, setQty] = useImmer({ current: 0, avaiable: product?.total });
     const noQty = qty.current === 0;
     const itmNotAvaiable = qty.avaiable === 0;
 
@@ -77,6 +77,26 @@ export default function ProductDetails() {
         }
     };
 
+    const [loading, setLoading] = useState(true);
+
+    const fetchItem = async () => {
+        setLoading(true)
+        try {
+            const item = await dispatch(fetchItemById(urlParams.productId)).unwrap();
+            setProduct(item);
+        } catch (error) {
+            console.error(error);
+        }
+        setLoading(false);
+    }
+
+    useEffect(() => {
+        fetchItem();
+    }, [])
+
+
+    if (loading) return (<PulseLoader />)
+
     return (
         <div className='container mx-auto'>
             <div className='mx-2 flex items-center'>
@@ -89,10 +109,10 @@ export default function ProductDetails() {
                 }
             </div>
             <div className='flex items-center bg-white my-2 p-2 rounded'>
-                <ViewImage images={product.images} handleChangeImage={handleChangeImage} />
+                <ViewImage images={product?.images} handleChangeImage={handleChangeImage} />
                 <div className='w-1/2 m-1'>
                     <div className='border-b border-b-gray-300 pb-5'>
-                        <p className='block text-xl font-semibold text-gray-800'>{product.description}</p>
+                        <p className='block text-xl font-semibold text-gray-800'>{product?.description}</p>
                         <div className='flex items-center mt-4'>
                             <div className='flex items-center mr-3'>
                                 <BsStarFill className='mx-[2px] text-yellow-600 text-lg' />
@@ -102,21 +122,21 @@ export default function ProductDetails() {
                                 <BsStar className='mx-[2px] text-lg' />
                             </div>
                             <div className='text-center'>
-                                <span className="font-light">{product.rating} rating</span>
+                                <span className="font-light">{product?.rating} rating</span>
                                 <span className='mx-2 text-xl font-thin'>|</span>
-                                <span className='font-light'>{product.qa}</span>
+                                <span className='font-light'>{product?.qa}</span>
                             </div>
                         </div>
                         <div className='mt-2'>
                             <span className='mr-2 font-thin text-sm'>Brand :</span>
-                            <span className='font-light text-sm capitalize'>{product.brand}</span>
+                            <span className='font-light text-sm capitalize'>{product?.brand}</span>
                         </div>
                     </div>
                     <div className='py-5'>
                         <div className='flex items-center justify-between'>
                             <div className='text-orange-500 text-xl'>
                                 <span className='mr-4'>MMK</span>
-                                <span className='font-medium'>{product.price}</span>
+                                <span className='font-medium'>{product?.price}</span>
                             </div>
                             <div className='flex items-center text-gray-600'>
                                 <button onClick={() => handleAddToWishList()}>
@@ -129,7 +149,7 @@ export default function ProductDetails() {
                             <span className='font-light text-sm block text-gray-600'>Quantity : </span>
                             <div className='flex items-center mt-2'>
                                 <button onClick={() => decreQty()} className={`px-6 border border-gray-300 rounded text-2xl text-gray-500 outline-none transition duration-500 ease-in-out ${noQty && "cursor-default border-gray-100 text-gray-200"}`}>-</button>
-                                <span className={`mx-3 text-2xl text-gray-700 transition duration-500 ease-in-out ${itmNotAvaiable && "text-gray-400"}`}>{qty.current}</span>
+                                <span className={`mx-3 text-2xl text-gray-700 transition duration-500 ease-in-out ${itmNotAvaiable && "text-gray-400"}`}>{qty?.current}</span>
                                 <button onClick={() => increQty()} className={`px-6 border border-gray-300 rounded text-2xl text-gray-500 outline-none transition duration-500 ease-in-out ${(itmNotAvaiable || (qty.current === qty.avaiable)) && "cursor-default border-gray-100 text-gray-200"}`}>+</button>
                                 <span className={`mx-5 font-thin ${itmNotAvaiable && "line-through"}`}>{itmNotAvaiable ? "no" : qty.avaiable} items aviables</span>
                             </div>
@@ -227,7 +247,7 @@ export default function ProductDetails() {
                         <span className='mx-2 text-lg font-medium text-gray-700'>Product Details</span>
                         <div className='bg-white mt-2 px-5 py-1 rounded'>
                             {
-                                product.details.features.map(feature => (
+                                product?.details.features.map(feature => (
                                     <div key={feature.id} className='w-full my-10 flex items-center'>
                                         <div className='w-1/2'>
                                             <span className='capitalize'>{feature.name}</span>
@@ -239,7 +259,7 @@ export default function ProductDetails() {
                                 ))
                             }
                             <ul className='list-disc mx-3'>
-                                {product.details.desc.map((dsc, index) => <li key={index + 1} className='my-4 text-sm font-medium text-gray-800'>{dsc}</li>)}
+                                {product?.details.desc.map((dsc, index) => <li key={index + 1} className='my-4 text-sm font-medium text-gray-800'>{dsc}</li>)}
                             </ul>
                         </div>
                     </div>
@@ -325,7 +345,7 @@ export default function ProductDetails() {
                         <span className='mx-2 text-lg font-medium text-gray-700'>Product Reviews</span>
                         <div className='bg-white mt-2 px-5 py-1 rounded'>
                             {
-                                product.reviews.map((review, index, arr) => (
+                                product?.reviews?.map((review, index, arr) => (
                                     <>
                                         <div key={review.id} className='p-10'>
                                             <div className='flex items-center'>

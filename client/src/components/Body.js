@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import { BsListUl } from 'react-icons/bs';
 import ProductCard from './ProductCard';
 import { category_data } from '../dummyData/Categories';
+import { selectItems } from '../app/itemSlice'
 import { BsChevronLeft, BsChevronRight, BsArrowDownShort } from 'react-icons/bs'
 
 
@@ -45,6 +47,8 @@ const clearance_items = [
 
 export default function Body() {
 
+    const items = useSelector(selectItems);
+
     function topMostSection() {
         return (
             <div className='relative grid grid-cols-5 gap-1'>
@@ -83,10 +87,14 @@ export default function Body() {
 
     function productCardSection() {
 
+        let itmArr = [];
+        for (let i = 1; i <= 10; i++)
+            itmArr.push(items[0]);
+
         return (
             <>
                 <div className='relative grid grid-cols-5 gap-1'>
-                    <ProductCard product={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]} />
+                    {itmArr.map((itm, index) => <ProductCard key={index} product={itm} />)}
                 </div>
                 <div className='flex justify-center my-2 items-center'>
                     <button className='px-5 py-2 bg-gray-300 rounded-full flex justify-around items-center shadow hover:shadow-md'>
@@ -102,7 +110,7 @@ export default function Body() {
     return (
         <div className='container mx-auto'>
             {topMostSection()}
-            {productCardSection()}
+            {items ? productCardSection() : ""}
         </div>
     )
 }

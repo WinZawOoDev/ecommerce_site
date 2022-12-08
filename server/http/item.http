@@ -1,0 +1,74 @@
+@hostname = localhost
+@port = 8000
+
+@baseUrl = http://{{hostname}}:{{port}}/
+
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MzhjOGFlOTQxZjJhNjNmMGUwZmY0YTQiLCJpYXQiOjE2NzAzMzczMzEsImV4cCI6MTY3MDMzOTEzMSwidHlwZSI6ImFjY2VzcyJ9.l9WEV9dixbVV75Wpzi_kVEXuV8QxqgTpofvg2vJ2uFg
+
+
+
+GET  {{baseUrl}}v1/items HTTP/1.1
+Authorization: {{token}}
+
+###
+
+POST {{baseUrl}}v1/items HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "name":"logiTech G502 mouse",
+    "brand":"logitech",
+    "description":"Logitech G502 Lightspeed Wireless Gaming Mouse with Hero 25K Sensor, PowerPlay Compatible, Tunable Weights and Lightsync RGB - Black",
+    "price": 150000,
+    "qa":"200 answers and questions",
+    "rating":140,
+    "images":[
+        {"name":"image0","src":"/items/mouse.png","view":true},
+        {"name":"image1","src":"/items/logi_1.jpg","view":false},
+        {"name":"image2","src":"/items/logi_2.jpg","view":false},
+        {"name":"image3","src":"/items/logi_3.jpg","view":false},
+        {"name":"image4","src":"/items/logi_4.jpg","view":false}
+    ],
+    "details":{
+        "features":[
+            {"name":"brand","value":"logitech"},
+            {"name":"color","value":"black"},
+            {"name":"connectivity technology","value":"wireless, USB"},
+            {"name":"special features","value":"wireless"},
+            {"name":"number of buttons","value":"11"},
+            {"name":"hand orientations","value":"right"}
+        ],
+        "desc":[
+            "World’s Selling Wireless Gaming Gear Brand - Based on independent sales data (FEB ‘19 - FEB’20) of Wireless Gaming Keyboard, Mice, and PC Headset in units from: US, CA, CN, JP, KR, TW, TH, IN, DE, FR, RU, UK, SE, TR","PowerPlay wireless charging: Never worry about your battery life again. Add the power play wireless charging system to keep your G502 Lightspeed Wireless Mouse and other compatible G mice charged while at rest and at play. Powerplay wireless charging system sold separately","Light speed wireless gaming mouse: Exclusive Logitech G ultra-fast wireless technology used by Pro gamers in competitions worldwide","11 customizable buttons and hyper fast scroll wheel: Assign custom macro and shortcut commands to the buttons for each game with Logitech G hub software. Use hyper fast scrolling to rapidly review menus, long web pages and more","Hero 25K sensor through a software update from G HUB, this upgrade is free to all players: Our most advanced, with 1:1 tracking, 400plus ips, and 100 - 25,600 max dpi sensitivity plus zero smoothing, filtering, or acceleration"
+            ]
+        },
+        "reviews":[
+            {"user":"John Smith","rating":5,"date":"September 13 2022 ","desc":"It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."},
+            {"user":"Nicky James","rating":4,"date":"August 4 2022 ","desc":"There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable."}
+        ]
+}
+
+
+###
+GET  {{baseUrl}}v1/items/638f4e0c560599bfd89591ca HTTP/1.1
+Authorization: {{token}}
+
+###
+
+PATCH  {{baseUrl}}v1/users/638c8ae941f2a63f0e0ff4a4 HTTP/1.1
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+    "name" : "Updated John Doe",
+    "email" : "johndoe@mail.com",
+    "password": "johnd0epass"
+}
+
+###
+DELETE  {{baseUrl}}v1/users/638ccd361be82faad28c8da8 HTTP/1.1
+Authorization: {{token}}
+
+
+

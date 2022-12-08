@@ -24,9 +24,9 @@ export default function Main() {
                 <Route path='/' element={<Body />} />
                 <Route path='category/:mainCategory/:subCategory/:product' element={<><Outlet /></>}>
                     <Route index element={<OneCategory />} />
-                    <Route path='product-details/:mainCategory/:subCategory/:product/:producId' element={<ProductDetails />} />
+                    <Route path='product-details/:mainCategory/:subCategory/:product/:productId' element={<ProductDetails />} />
                 </Route>
-                <Route path='product-details/:mainCategory/:subCategory/:product/:producId' element={<ProductDetails />} />
+                <Route path='product-details/:mainCategory/:subCategory/:product/:productId' element={<ProductDetails />} />
                 <Route path='view-cart/*' element={<Cart />} />
                 <Route path='empty-cart' element={<EmptyCart />} />
                 <Route path='*' element={<PageNotFound />} />

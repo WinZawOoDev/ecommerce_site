@@ -4,6 +4,8 @@ import { BsChevronRight, BsChevronExpand, BsCheck, BsFillCaretRightSquareFill, B
 import ProductCard from './ProductCard'
 import { Listbox, Transition } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useSelector } from 'react-redux'
+import { selectItems } from '../app/itemSlice'
 
 const people = [
     { name: 'Wade Cooper' },
@@ -203,6 +205,11 @@ export default function OneCategory() {
     const category_tree = ["Home", "pc & components", "laptop"];
 
     const urlParams = useParams();
+    const items = useSelector(selectItems);
+    let itmArr = [];
+    for (let i = 1; i <= 16; i++) {
+        itmArr.push(items[0]);
+    }
 
     const [brandChecked, setBrandChecked] = useState([]);
     // const handleCheckBoxChange = ({ e: { currentTarget: { checked } }, item }) => item && setBrandChecked(prevs => prevs.map(prev => prev.id === item.id ? { ...prev, checked } : prev))
@@ -226,7 +233,6 @@ export default function OneCategory() {
         e.preventDefault();
         setPrices(prev => ({ ...prev, min: "", max: "" }));
     }
-
 
 
     useEffect(() => {
@@ -285,7 +291,7 @@ export default function OneCategory() {
                     }
                 </div>
                 <div className='grid grid-cols-4 gap-1'>
-                    <ProductCard product={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]} />
+                    {itmArr.map((itm, index) => <ProductCard key={index} product={itm} />)}
                 </div>
             </div>
             <div className='flex justify-center my-5'>
