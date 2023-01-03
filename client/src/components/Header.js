@@ -20,7 +20,8 @@ import {
     BsSuitHeart
 } from 'react-icons/bs'
 import { MM, EG } from 'country-flag-icons/react/3x2';
-import { category_data } from '../dummyData/Categories';
+import { v4 as uuidv4 } from 'uuid'
+import { useCategory } from '../hooks'
 
 
 const MoneySignIcon = () => <span className='p-1 border-2 border-gray-300 rounded-full text-gray-500 m-1 text-sm'><BsCurrencyDollar /></span>;
@@ -49,7 +50,9 @@ export default function Header() {
 
     const accountInfo = { button: { name: "Account", Label: UserIcon }, items: [{ id: 1, name: "SignIn", Label: SingInIcon, }, { id: 2, name: "SignOut", Label: SignOutIcon }] }
 
-    const [searchForm, setSearchForm] = useState({ product: "", category: category_data[0], showResult: false });
+    const { mainCat: categories } = useCategory();
+
+    const [searchForm, setSearchForm] = useState({ product: "", category: { id: uuidv4(), name: "all categories", unavailable: true }, showResult: false });
     const closeSearchResult = () => setSearchForm(prev => ({ ...prev, showResult: prev.showResult && false }));
 
     const handleCatSelect = category => setSearchForm(prev => ({ ...prev, category }));
@@ -111,7 +114,7 @@ export default function Header() {
                             <input type="text" name='product' value={searchForm["product"]} onChange={handleProductChange} className="flex grow py-2 pl-2 focus:outline-none bg-white" />
                             <div className='flex items-center'>
                                 <div onClick={() => closeSearchResult()}>
-                                    <ListBox items={category_data} value={searchForm["category"]} handleChange={handleCatSelect} />
+                                    <ListBox items={categories} value={searchForm["category"]} handleChange={handleCatSelect} />
                                 </div>
                                 <button onClick={() => handleSearch()} className='h-auto bg-red-800 border border-red-800 p-2'><BsSearch className='text-white text-2xl' /></button>
                             </div>
@@ -243,22 +246,22 @@ function ListBox({ items, value, handleChange }) {
                 ({ open }) => (
                     <>
                         <Listbox.Button className="relative flex items-center border-l border-red-800 py-[11px] px-3 focus:outline-none bg-white ">
-                            <span className='text-sm text-gray-500 capitalize'>{value.name}</span>
+                            <span className='text-sm text-gray-500 capitalize'>{value?.name}</span>
                             <span className={`ml-2 mr-1 text-gray-400 text-xs ${open ? 'rotate-180' : 'rotate-0'}`}><BsFillCaretDownFill /></span>
                         </Listbox.Button>
                         <Listbox.Options className="absolute w-48 bg-white border border-gray-100 py-3 px-1 mt-1 max-h-80 overflow-y-auto rounded-b-sm shadow-md scrollbar-thin scrollbar-thumb-gray-300 scrollbar-thumb-rounded-md scrollbar-track-rounded-md">
                             {items.map((item) => (
                                 <Listbox.Option
-                                    key={item.id}
+                                    key={item?.id}
                                     value={item}
-                                    disabled={item.unavailable}
+                                    disabled={item?.unavailable}
                                     className={({ active }) => `w-full flex items-center text-gray-500 px-1 my-1 cursor-default ${active && 'bg-orange-500 text-white rounded'}`}
                                 >
                                     {
-                                        value.name === item.name ?
+                                        value?.name === item?.name ?
                                             <span className='text-lg w-1/6 text-right'><BsCheck /></span> : <span className='w-1/6'></span>
                                     }
-                                    <span className='w-5/6 truncate text-sm text-left capitalize'>{item.name}</span>
+                                    <span className='w-5/6 truncate text-sm text-left capitalize'>{item?.name}</span>
                                 </Listbox.Option>
                             ))}
                         </Listbox.Options>

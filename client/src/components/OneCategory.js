@@ -4,8 +4,9 @@ import { BsChevronRight, BsChevronExpand, BsCheck, BsFillCaretRightSquareFill, B
 import ProductCard from './ProductCard'
 import { Listbox, Transition } from '@headlessui/react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { selectItems } from '../app/itemSlice'
+import { fetchProductCategorys } from '../app/categorySlice'
 
 const people = [
     { name: 'Wade Cooper' },
@@ -141,12 +142,11 @@ const category_types = [
     }
 ]
 
-
 function ListBox() {
     const [selected, setSelected] = useState(people[0])
 
     return (
-        <div className="z-50 w-48">
+        <div className="z-50 w-48" >
             <Listbox value={selected} onChange={setSelected}>
                 <div className="relative mt-1">
                     <Listbox.Button className="relative w-full cursor-default rounded border border-gray-300 bg-white py-1 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
@@ -195,7 +195,7 @@ function ListBox() {
                     </Transition>
                 </div>
             </Listbox>
-        </div>
+        </div >
     )
 }
 
@@ -205,23 +205,33 @@ export default function OneCategory() {
     const category_tree = ["Home", "pc & components", "laptop"];
 
     const urlParams = useParams();
+    const dispatch = useDispatch();
+
     const items = useSelector(selectItems);
     let itmArr = [];
     for (let i = 1; i <= 16; i++) {
-        itmArr.push(items[0]);
+        if (items && (items.length !== 0)) itmArr.push(items[0]);
     }
 
-    const [brandChecked, setBrandChecked] = useState([]);
-    // const handleCheckBoxChange = ({ e: { currentTarget: { checked } }, item }) => item && setBrandChecked(prevs => prevs.map(prev => prev.id === item.id ? { ...prev, checked } : prev))
+    const [productCategorys, setProductCategorys] = useState([]);
+    const [filterValue, setFilterValue] = useState([]);
 
-    const handleCheckBoxChange = ({ e: { currentTarget: { checked } }, item }) => setBrandChecked(prevs => {
+    const handleCheckBoxChange = ({ e: { currentTarget: { checked } }, item }) => setProductCategorys(prevs => {
+
         prevs.forEach(function update(category) {
-            if ((item.id === category.id) && (item.name.toLocaleLowerCase() === category.name.toLocaleLowerCase()))
-                category.checked = checked;
+            if (item === category && checked && !filterValue.includes(category)) {
+                setFilterValue(prevValue => [...prevValue, category]);
+                // console.log(category, checked);
+            } else if (item === category && !checked && filterValue.includes(category)) {
+                setFilterValue(prevValue => prevValue.filter(list => list !== category))
+                // console.log(category, checked);
+            }
             Array.isArray(category.data) && category.data.forEach(update);
-        })
+        });
+
         return prevs;
     });
+
 
     const [prices, setPrices] = useState({ min: "", max: "" });
     const handlePricesChange = ({ currentTarget }) => setPrices(prev => {
@@ -234,15 +244,22 @@ export default function OneCategory() {
         setPrices(prev => ({ ...prev, min: "", max: "" }));
     }
 
+    const getProductCategorys = async () => {
+        try {
+
+            const data = await dispatch(fetchProductCategorys()).unwrap();
+            const temp = [...data];
+            temp.splice(1, 0, { title: "prices", data: { min: "", max: "" } });
+            setProductCategorys(temp);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
-        // setBrandChecked(prev => [...brands.map(brand => ({ ...brand, checked: false }))]);
-        setBrandChecked(() => {
-            const temp = [...category_types];
-            temp.splice(1, 0, { title: "prices", data: { min: "", max: "" } });
-            return temp;
-        });
-    }, []);
+        getProductCategorys();
+    }, [filterValue]);
 
     return (
         <div className='container mx-auto'>
@@ -269,10 +286,10 @@ export default function OneCategory() {
                         <span className='block text-sm font-light text-gray-500 hover:text-orange-500 hover:underline cursor-pointer'>monitors & components</span>
                     </div>
                     {
-                        brandChecked.map((category, index, arr) => {
+                        productCategorys.map((category, index, arr) => {
                             if (category.title.includes("price")) {
                                 return <div key={index} className={`py-6 ${((arr.length - 1) !== index) && "border-b border-b-gray-200"}`}><PriceRange prices={prices} onChange={handlePricesChange} onSubmit={handlePricesSubmit} /></div>
-                            } else if ("title" in category.data[0] && "data" in category.data[0]) {
+                            } else if (Array.isArray(category.data) && (typeof category.data[0] === 'object') && !category.title.includes("price")) {
                                 return (
                                     <div key={index} className={`py-6 ${((arr.length - 1) !== index) && "border-b border-b-gray-200"}`}>
                                         <span className='text-sm text-gray-800 capitalize'>{category.title}</span>
@@ -337,7 +354,7 @@ function CheckList({ title, items, onChange }) {
                             className='flex items-center my-1'
                         >
                             <input onChange={(e) => onChange({ e, item })} type="checkbox" className='mr-2 w-[0.9em] h-[0.9em] default:border default:border-gray-100 checked:border p-1 checked:border-gray-200' />
-                            <span className='font-light text-sm text-gray-600'>{item.name}</span>
+                            <span className='font-light text-sm text-gray-600'>{item}</span>
                         </li>
                     ))
                 }
@@ -385,7 +402,7 @@ function CheckList({ title, items, onChange }) {
                                                 className='flex items-center my-1'
                                             >
                                                 <input onChange={(e) => onChange({ e, item })} type="checkbox" className='mr-2 w-[0.9em] h-[0.9em] default:border default:border-gray-100 checked:border p-1 checked:border-gray-200' />
-                                                <span className='font-light text-sm text-gray-600'>{item.name}</span>
+                                                <span className='font-light text-sm text-gray-600'>{item}</span>
                                             </li>
                                         ))
                                     }

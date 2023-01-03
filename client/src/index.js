@@ -7,8 +7,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import store from './app/store'
 import { fetchItems } from './app/itemSlice'
+import { fetchCategorys } from './app/categorySlice'
 
+store.dispatch(fetchCategorys())
 store.dispatch(fetchItems())
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { BsListUl } from 'react-icons/bs';
 import ProductCard from './ProductCard';
-import { category_data } from '../dummyData/Categories';
-import { selectItems } from '../app/itemSlice'
+import { selectItems } from '../app/itemSlice';
+import { useCategory } from '../hooks'
 import { BsChevronLeft, BsChevronRight, BsArrowDownShort } from 'react-icons/bs'
 
 
@@ -49,11 +49,14 @@ export default function Body() {
 
     const items = useSelector(selectItems);
 
+    const { category, mapWithIcon } = useCategory();
+    const categories = mapWithIcon(category);
+
     function topMostSection() {
         return (
             <div className='relative grid grid-cols-5 gap-1'>
 
-                <CategoryList data={category_data} />
+                <CategoryList data={categories} />
 
                 <DiscountSale items={discount_items} />
 
